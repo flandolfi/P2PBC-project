@@ -6,9 +6,11 @@ import org.graphstream.algorithm.Dijkstra;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.stream.file.FileSinkDOT;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Date;
 
@@ -17,7 +19,8 @@ import static java.nio.file.StandardOpenOption.CREATE;
 import static org.graphstream.algorithm.Toolkit.averageClusteringCoefficient;
 import static org.graphstream.algorithm.Toolkit.averageDegree;
 
-public class AnalysisLogger implements Logger<Double> {
+public class AnalysisLogger<T> implements Logger<T> {
+    private File root;
     private File pathLengthLog;
     private File clusteringCoefficientLog;
     private File nodeDegreeLog;
@@ -30,13 +33,13 @@ public class AnalysisLogger implements Logger<Double> {
             throw new IllegalArgumentException("Not a directory");
         }
 
-        File directory = new File(directoryPath + "/simulation-" + new Date().getTime());
-        directory.mkdirs();
+        root = new File(directoryPath + "/simulation-" + new Date().getTime());
+        root.mkdirs();
 
-        pathLengthLog = new File(directory.getPath() + "/pathLength.csv");
-        clusteringCoefficientLog = new File(directory.getPath() + "/clusteringCoefficient.csv");
-        nodeDegreeLog = new File(directory.getPath() + "/nodeDegree.csv");
-        connectivityLog = new File(directory.getPath() + "/connectivity.csv");
+        pathLengthLog = new File(root.getPath() + "/pathLength.csv");
+        clusteringCoefficientLog = new File(root.getPath() + "/clusteringCoefficient.csv");
+        nodeDegreeLog = new File(root.getPath() + "/nodeDegree.csv");
+        connectivityLog = new File(root.getPath() + "/connectivity.csv");
     }
 
     private String logData(Object... data) {
@@ -50,20 +53,30 @@ public class AnalysisLogger implements Logger<Double> {
     }
 
     @Override
-    public void logNetworkState(Collection<Correspondent<Double>> network, int step) {
+    public void logNetworkState(Collection<Correspondent<T>> network, int step) {
         Graph graph = new SingleGraph("step-" + step, false, true);
         Integer edgeId = 0;
         Integer nodeId = 0;
 
-        for (Correspondent<Double> n : network) {
+        for (Correspondent<T> n : network) {
             System.out.print("LOG: Creating graph model... " + nodeId++ + "/" + network.size());
             graph.addNode(n.getAddress().toString());
 
-            for (Correspondent<Double> e : n.getPeers()) {
+            for (Correspondent<T> e : n.getPeers()) {
                 graph.addEdge((edgeId++).toString(), n.getAddress().toString(), e.getAddress().toString());
             }
         }
 
+        System.out.print("LOG: Writing graph to DOT file... ");
+        FileSinkDOT sink = new FileSinkDOT();
+
+        try (Writer log = Files.newBufferedWriter(Paths.get(root.getPath() + "/network-" + step + ".dot"), CREATE)) {
+            sink.writeAll(graph, log);
+        } catch (IOException e) {
+            System.err.println("\nError: " + e.getMessage());
+        }
+
+        System.out.println("Done");
         System.out.print("\nLOG: Computing average clustering coefficient... ");
         double clusteringCoefficient = averageClusteringCoefficient(graph);
         System.out.println("Done");
