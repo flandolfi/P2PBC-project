@@ -44,14 +44,16 @@ public class Correspondent<T> {
     }
 
     public Set<Correspondent<T>> getPeers() {
-        return cache.getPeers();
-    }
-
-    public Correspondent getRandomPeer() {
         Set<Correspondent<T>> peers = cache.getPeers();
         peers.remove(this);
 
-        return (Correspondent) peers.toArray()[generator.nextInt(peers.size())];
+        return peers;
+    }
+
+    public Correspondent<T> selectPeer() {
+        Set<Correspondent<T>> peers = getPeers();
+
+        return (Correspondent<T>) peers.toArray()[generator.nextInt(peers.size())];
     }
 
     @Override
