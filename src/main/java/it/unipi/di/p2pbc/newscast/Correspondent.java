@@ -16,10 +16,6 @@ public class Correspondent<T> {
         this.cache = new Cache<>();
     }
 
-    public Cache<T> getCache() {
-        return cache;
-    }
-
     public Agent<T> getAgent() {
         return agent;
     }
@@ -32,6 +28,10 @@ public class Correspondent<T> {
         return address;
     }
 
+    public Cache<T> getCache() {
+        return cache;
+    }
+
     public void setAddress(InetSocketAddress address) {
         this.address = address;
     }
@@ -39,15 +39,15 @@ public class Correspondent<T> {
     public void update(Correspondent<T> peer) {
         T news = agent.getNews();
         cache.add(this, news);
-        agent.updateNews(peer.getCache().getNews());
-        cache.merge(peer.getCache());
+        agent.updateNews(peer.cache.getNews());
+        cache.merge(peer.cache);
     }
 
-    public Correspondent<T> getRandomPeer() {
+    public Correspondent getRandomPeer() {
         Set<Correspondent<T>> peers = cache.getPeers();
         peers.remove(this);
 
-        return (Correspondent<T>) peers.toArray()[generator.nextInt(peers.size())];
+        return (Correspondent) peers.toArray()[generator.nextInt(peers.size())];
     }
 
     @Override
