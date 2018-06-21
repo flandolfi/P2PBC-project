@@ -43,6 +43,10 @@ public class Correspondent<T> {
         cache.merge(peer.cache);
     }
 
+    public Set<Correspondent<T>> getPeers() {
+        return cache.getPeers();
+    }
+
     public Correspondent getRandomPeer() {
         Set<Correspondent<T>> peers = cache.getPeers();
         peers.remove(this);
