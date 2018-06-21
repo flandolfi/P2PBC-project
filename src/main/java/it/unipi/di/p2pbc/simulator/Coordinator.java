@@ -31,7 +31,7 @@ public class Coordinator<T> {
                 if (lastUpdate.get(node) == currentStep)
                     continue;
 
-                Correspondent peer = node.getRandomPeer();
+                Correspondent<T> peer = node.selectPeer();
                 lastUpdate.put(node, currentStep);
                 lastUpdate.put(peer, currentStep);
 
