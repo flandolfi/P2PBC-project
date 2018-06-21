@@ -48,9 +48,13 @@ public class Cache<T> {
         }
     }
 
+    public void removeEntriesFrom(Correspondent<T> peer) {
+        cacheEntries.removeIf(e -> e.peer == peer);
+    }
+
     public void merge(Cache<T> cache) {
         cacheEntries.forEach(cache::add);
-        cacheEntries = cache.cacheEntries;
+        cacheEntries = new PriorityQueue<>(cache.cacheEntries);
     }
 
     public Set<Correspondent<T>> getPeers() {
