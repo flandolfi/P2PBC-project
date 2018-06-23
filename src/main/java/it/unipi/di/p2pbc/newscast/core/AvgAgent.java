@@ -1,11 +1,11 @@
-package main.java.it.unipi.di.p2pbc.newscast;
+package it.unipi.di.p2pbc.newscast.core;
 
 import java.util.List;
 
-public class MaxAgent implements Agent<Double> {
+public class AvgAgent implements Agent<Double> {
     private Double value;
 
-    public MaxAgent(Double value) {
+    public AvgAgent(Double value) {
         this.value = value;
     }
 
@@ -16,6 +16,8 @@ public class MaxAgent implements Agent<Double> {
 
     @Override
     public void updateNews(List<Double> news) {
-        news.forEach(v -> value = v > value? v : value);
+        value = 0.;
+        news.forEach(v -> value += v);
+        value /= news.size();
     }
 }

@@ -1,6 +1,6 @@
-package main.java.it.unipi.di.p2pbc.simulator;
+package it.unipi.di.p2pbc.newscast.simulation;
 
-import main.java.it.unipi.di.p2pbc.newscast.Correspondent;
+import it.unipi.di.p2pbc.newscast.core.Correspondent;
 import org.graphstream.algorithm.ConnectedComponents;
 import org.graphstream.algorithm.Dijkstra;
 import org.graphstream.graph.Graph;

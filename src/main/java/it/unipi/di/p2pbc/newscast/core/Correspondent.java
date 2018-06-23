@@ -1,4 +1,4 @@
-package main.java.it.unipi.di.p2pbc.newscast;
+package it.unipi.di.p2pbc.newscast.core;
 
 import java.net.InetSocketAddress;
 import java.util.Random;
