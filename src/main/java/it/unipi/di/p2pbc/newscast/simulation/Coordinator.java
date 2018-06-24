@@ -2,43 +2,46 @@ package it.unipi.di.p2pbc.newscast.simulation;
 
 import it.unipi.di.p2pbc.newscast.core.Correspondent;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.time.Instant;
+import java.util.*;
 
 public class Coordinator<T> {
-    private NetworkGenerator<T> generator;
+    private Network<T> network;
     private int currentStep;
     private Logger<T> logger;
 
 
-    public Coordinator(NetworkGenerator<T> generator, Logger<T> logger) {
-        this.generator = generator;
+    public Coordinator(Network<T> network, Logger<T> logger) {
+        this.network = network;
         this.currentStep = 0;
         this.logger = logger;
     }
 
     public void simulate(int steps) {
-        List<Correspondent<T>> network = new ArrayList<>(generator.getNetwork());
-        HashMap<Correspondent, Integer> lastUpdate = new HashMap<>();
-        generator.getNetwork().forEach(n -> lastUpdate.put(n, currentStep - 1));
+        simulate(steps, false);
+    }
+
+    public void simulate(int steps, boolean shuffle) {
+        List<Correspondent<T>> network = new ArrayList<>(this.network.getNodes());
+        Instant lastUpdate = Instant.now();
+
+        if (shuffle)
+            Collections.shuffle(network);
 
         for (; currentStep < currentStep + steps; currentStep++) {
             logger.logNetworkState(network, currentStep);
 
             for (Correspondent<T> node: network) {
-                if (lastUpdate.get(node) == currentStep)
-                    continue;
+                if (node.getLastUpdate().compareTo(lastUpdate) <= 0) {
+                    Correspondent<T> peer = node.selectPeer();
 
-                Correspondent<T> peer = node.selectPeer();
-                lastUpdate.put(node, currentStep);
-                lastUpdate.put(peer, currentStep);
-
-                node.update(peer);
+                    if (peer != null)
+                        node.update(peer);
+                }
             }
 
-            Collections.shuffle(network);
+            network.sort(Comparator.comparing(Correspondent::getLastUpdate));
+            lastUpdate = Instant.now();
         }
 
         logger.logNetworkState(network, steps);

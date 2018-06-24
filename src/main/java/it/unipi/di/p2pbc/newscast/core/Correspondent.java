@@ -1,6 +1,8 @@
 package it.unipi.di.p2pbc.newscast.core;
 
 import java.net.InetSocketAddress;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Set;
 
@@ -8,12 +10,14 @@ public class Correspondent<T> {
     private Agent<T> agent;
     private Cache<T> cache;
     private InetSocketAddress address;
+    private Instant lastUpdate;
     private static Random generator = new Random(42);
 
     public Correspondent(InetSocketAddress address, Agent<T> agent) {
         this.address = address;
         this.agent = agent;
         this.cache = new Cache<>();
+        this.lastUpdate = Instant.now();
     }
 
     public Agent<T> getAgent() {
@@ -36,11 +40,17 @@ public class Correspondent<T> {
         this.address = address;
     }
 
+    public Instant getLastUpdate() {
+        return lastUpdate;
+    }
+
     public void update(Correspondent<T> peer) {
         T news = agent.getNews();
         cache.add(this, news);
         agent.updateNews(peer.cache.getNews());
         cache.merge(peer.cache);
+        lastUpdate = Instant.now();
+        peer.lastUpdate = lastUpdate;
     }
 
     public Set<Correspondent<T>> getPeers() {
@@ -51,9 +61,12 @@ public class Correspondent<T> {
     }
 
     public Correspondent<T> selectPeer() {
-        Set<Correspondent<T>> peers = getPeers();
+        ArrayList<Correspondent<T>> peers = new ArrayList<>(getPeers());
 
-        return (Correspondent<T>) peers.toArray()[generator.nextInt(peers.size())];
+        if (peers.size() == 0)
+            return null;
+
+        return peers.get(generator.nextInt(peers.size()));
     }
 
     @Override
