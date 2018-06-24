@@ -1,27 +1,28 @@
 package it.unipi.di.p2pbc.newscast.core;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Cache<T> {
     private class CacheEntry implements Comparable<CacheEntry>{
         Correspondent<T> peer;
-        Date timestamp;
+        Instant timestamp;
         T data;
 
         CacheEntry(Correspondent<T> peer, T data) {
             this.peer = peer;
             this.data = data;
-            this.timestamp = new Date();
+            this.timestamp = Instant.now();
         }
 
         @Override
         public int compareTo(CacheEntry o) {
-            return -this.timestamp.compareTo(o.timestamp);
+            return timestamp.compareTo(o.timestamp);
         }
     }
 
-    private PriorityQueue<CacheEntry> cacheEntries;
+    private PriorityQueue<CacheEntry> cacheEntries = new PriorityQueue<>();
     private static int size = 20;
 
     public static int getSize() {
@@ -30,10 +31,6 @@ public class Cache<T> {
 
     public static void setSize(int size) {
         Cache.size = size;
-    }
-
-    public Cache() {
-        this.cacheEntries = new PriorityQueue<>();
     }
 
     public void add(Correspondent<T> peer, T data) {
@@ -49,7 +46,7 @@ public class Cache<T> {
     }
 
     public void removeEntriesFrom(Correspondent<T> peer) {
-        cacheEntries.removeIf(e -> e.peer == peer);
+        cacheEntries.removeIf(e -> e.peer.equals(peer));
     }
 
     public void merge(Cache<T> cache) {
