@@ -7,12 +7,12 @@ import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.*;
 
-public class EmptyNetworkGenerator<T> implements NetworkGenerator<T> {
+public class EmptyNetwork<T> implements Network<T> {
     protected HashSet<Correspondent<T>> network = new HashSet<>();
-    protected Random generator = new Random();
+    protected Random random = new Random();
     protected AgentFactory<T> agentFactory;
 
-    protected EmptyNetworkGenerator(AgentFactory<T> agentFactory) {
+    protected EmptyNetwork(AgentFactory<T> agentFactory) {
         this.agentFactory = agentFactory;
     }
 
@@ -24,10 +24,10 @@ public class EmptyNetworkGenerator<T> implements NetworkGenerator<T> {
     protected InetSocketAddress generateAddress() {
         InetSocketAddress result = null;
         byte[] bytes = new byte[4];
-        generator.nextBytes(bytes);
+        random.nextBytes(bytes);
 
         try {
-            result = new InetSocketAddress(InetAddress.getByAddress(bytes), generator.nextInt(65536));
+            result = new InetSocketAddress(InetAddress.getByAddress(bytes), random.nextInt(65536));
         } catch (UnknownHostException ignore) {}
 
         return result;
@@ -44,7 +44,7 @@ public class EmptyNetworkGenerator<T> implements NetworkGenerator<T> {
     }
 
     @Override
-    public Set<Correspondent<T>> getNetwork() {
+    public Set<Correspondent<T>> getNodes() {
         return network;
     }
 
@@ -61,7 +61,7 @@ public class EmptyNetworkGenerator<T> implements NetworkGenerator<T> {
         if (delta >= 0) {
             for (int i = 0; i < delta; i++) {
                 Correspondent<T> peer = addRandomPeer();
-                peer.update(list.get(generator.nextInt(list.size())));
+                peer.update(list.get(random.nextInt(list.size())));
             }
         } else {
             Collections.shuffle(list);

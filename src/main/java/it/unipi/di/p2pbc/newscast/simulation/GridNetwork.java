@@ -2,8 +2,8 @@ package it.unipi.di.p2pbc.newscast.simulation;
 
 import it.unipi.di.p2pbc.newscast.core.Correspondent;
 
-public class GridNetworkGenerator<T> extends EmptyNetworkGenerator<T> {
-    public GridNetworkGenerator(int rows, int cols, AgentFactory<T> agentFactory) {
+public class GridNetwork<T> extends EmptyNetwork<T> {
+    public GridNetwork(int rows, int cols, AgentFactory<T> agentFactory) {
         super(agentFactory);
         Correspondent<T>[][] matrix = new Correspondent[rows][cols];
 
