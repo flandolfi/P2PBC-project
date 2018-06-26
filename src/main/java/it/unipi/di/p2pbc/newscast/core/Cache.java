@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Cache<T> {
-    private class CacheEntry implements Comparable<CacheEntry>{
+    private class CacheEntry implements Comparable<CacheEntry> {
         Correspondent<T> peer;
         Instant timestamp;
         T data;
@@ -18,11 +18,20 @@ public class Cache<T> {
 
         @Override
         public int compareTo(CacheEntry o) {
-            return timestamp.compareTo(o.timestamp);
+            return peer.equals(o.peer)? 0 : timestamp.equals(o.timestamp)? 1 : timestamp.compareTo(o.timestamp);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof Cache.CacheEntry) {
+                return peer.equals(((Cache.CacheEntry) o).peer);
+            }
+
+            return false;
         }
     }
 
-    private PriorityQueue<CacheEntry> cacheEntries = new PriorityQueue<>();
+    private TreeSet<CacheEntry> cacheEntries = new TreeSet<>();
     private static int size = 20;
 
     public static int getSize() {
@@ -38,10 +47,11 @@ public class Cache<T> {
     }
 
     private void add(CacheEntry entry) {
-        cacheEntries.offer(entry);
+        cacheEntries.removeIf(e -> e.peer == entry.peer && e.timestamp.compareTo(entry.timestamp) < 0);
+        cacheEntries.add(entry);
 
         if (cacheEntries.size() > size) {
-            cacheEntries.poll();
+            cacheEntries.pollFirst();
         }
     }
 
@@ -51,7 +61,7 @@ public class Cache<T> {
 
     public void merge(Cache<T> cache) {
         cacheEntries.forEach(cache::add);
-        cacheEntries = new PriorityQueue<>(cache.cacheEntries);
+        cacheEntries = new TreeSet<>(cache.cacheEntries);
     }
 
     public Set<Correspondent<T>> getPeers() {
