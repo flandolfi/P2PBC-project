@@ -12,6 +12,15 @@ public class Correspondent<T> {
     private InetSocketAddress address;
     private Instant lastUpdate;
     private static Random random = new Random(42);
+    private static boolean countPassiveUpdates = true;
+
+    public static void setPassiveUpdates(boolean countPassiveUpdates) {
+        Correspondent.countPassiveUpdates = countPassiveUpdates;
+    }
+
+    public static boolean passiveUpdates() {
+        return countPassiveUpdates;
+    }
 
     public Correspondent(InetSocketAddress address, Agent<T> agent) {
         this.address = address;
@@ -51,7 +60,9 @@ public class Correspondent<T> {
         peer.agent.updateNews(cache.getNews());
         cache.merge(peer.cache);
         lastUpdate = Instant.now();
-        peer.lastUpdate = lastUpdate; // Comment this line to consider only active updates
+
+        if (countPassiveUpdates)
+            peer.lastUpdate = lastUpdate;
     }
 
     public Set<Correspondent<T>> getPeers() {

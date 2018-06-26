@@ -9,7 +9,6 @@ public class Coordinator<T> {
     private Network<T> network;
     private List<Logger<T>> loggers;
 
-
     public Coordinator(Network<T> network, Logger<T>... loggers) {
         this.network = network;
         this.loggers = Arrays.asList(loggers);
@@ -17,7 +16,7 @@ public class Coordinator<T> {
     }
 
     public void simulate(int steps) {
-        simulate(steps, false);
+        simulate(steps, true);
     }
 
     public void simulate(int steps, boolean shuffle) {
@@ -26,8 +25,6 @@ public class Coordinator<T> {
 
         if (shuffle)
             Collections.shuffle(network);
-        else
-            network.sort(Comparator.comparing(Correspondent::getLastUpdate));
 
         for (int i = 0; i < steps; i++) {
             for (Correspondent<T> node: network) {
@@ -40,8 +37,10 @@ public class Coordinator<T> {
             }
 
             loggers.forEach(logger -> logger.logNetworkState(network));
-            network.sort(Comparator.comparing(Correspondent::getLastUpdate));
             lastUpdate = Instant.now();
+
+            if (Correspondent.passiveUpdates())
+                network.sort(Comparator.comparing(Correspondent::getLastUpdate));
         }
     }
 }
