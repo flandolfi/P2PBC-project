@@ -7,14 +7,13 @@ import java.util.*;
 
 public class Coordinator<T> {
     private Network<T> network;
-    private int currentStep;
-    private Logger<T> logger;
+    private List<Logger<T>> loggers;
 
 
-    public Coordinator(Network<T> network, Logger<T> logger) {
+    public Coordinator(Network<T> network, Logger<T>... loggers) {
         this.network = network;
-        this.currentStep = 0;
-        this.logger = logger;
+        this.loggers = Arrays.asList(loggers);
+        this.loggers.forEach(logger -> logger.logNetworkState(network.getNodes()));
     }
 
     public void simulate(int steps) {
@@ -27,10 +26,10 @@ public class Coordinator<T> {
 
         if (shuffle)
             Collections.shuffle(network);
+        else
+            network.sort(Comparator.comparing(Correspondent::getLastUpdate));
 
-        for (; currentStep < currentStep + steps; currentStep++) {
-            logger.logNetworkState(network, currentStep);
-
+        for (int i = 0; i < steps; i++) {
             for (Correspondent<T> node: network) {
                 if (node.getLastUpdate().compareTo(lastUpdate) <= 0) {
                     Correspondent<T> peer = node.selectPeer();
@@ -40,10 +39,9 @@ public class Coordinator<T> {
                 }
             }
 
+            loggers.forEach(logger -> logger.logNetworkState(network));
             network.sort(Comparator.comparing(Correspondent::getLastUpdate));
             lastUpdate = Instant.now();
         }
-
-        logger.logNetworkState(network, steps);
     }
 }
