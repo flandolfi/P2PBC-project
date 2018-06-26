@@ -11,7 +11,7 @@ public class Correspondent<T> {
     private Cache<T> cache;
     private InetSocketAddress address;
     private Instant lastUpdate;
-    private static Random generator = new Random(42);
+    private static Random random = new Random(42);
 
     public Correspondent(InetSocketAddress address, Agent<T> agent) {
         this.address = address;
@@ -45,12 +45,13 @@ public class Correspondent<T> {
     }
 
     public void update(Correspondent<T> peer) {
-        T news = agent.getNews();
-        cache.add(this, news);
+        cache.add(this, agent.getNews());
+        peer.cache.add(peer, peer.agent.getNews());
         agent.updateNews(peer.cache.getNews());
+        peer.agent.updateNews(cache.getNews());
         cache.merge(peer.cache);
         lastUpdate = Instant.now();
-        peer.lastUpdate = lastUpdate;
+        peer.lastUpdate = lastUpdate; // Comment this line to consider only active updates
     }
 
     public Set<Correspondent<T>> getPeers() {
@@ -66,7 +67,7 @@ public class Correspondent<T> {
         if (peers.size() == 0)
             return null;
 
-        return peers.get(generator.nextInt(peers.size()));
+        return peers.get(random.nextInt(peers.size()));
     }
 
     @Override
