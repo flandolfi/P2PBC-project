@@ -16,8 +16,6 @@ public class AvgAgent implements Agent<Double> {
 
     @Override
     public void updateNews(List<Double> news) {
-        value = 0.;
-        news.forEach(v -> value += v);
-        value /= news.size();
+        value =  0.5*(value + news.get(news.size() - 1));
     }
 }
