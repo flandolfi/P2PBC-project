@@ -18,7 +18,7 @@ public class Cache<T> {
 
         @Override
         public int compareTo(CacheEntry o) {
-            return peer.equals(o.peer)? 0 : timestamp.equals(o.timestamp)? 1 : timestamp.compareTo(o.timestamp);
+            return timestamp.compareTo(o.timestamp);
         }
 
         @Override
@@ -32,6 +32,7 @@ public class Cache<T> {
     }
 
     private TreeSet<CacheEntry> cacheEntries = new TreeSet<>();
+    private HashMap<Correspondent<T>, CacheEntry> peerToEntry = new HashMap<>();
     private static int size = 20;
 
     public static int getSize() {
@@ -47,16 +48,28 @@ public class Cache<T> {
     }
 
     private void add(CacheEntry entry) {
-        cacheEntries.removeIf(e -> e.peer == entry.peer && e.timestamp.compareTo(entry.timestamp) < 0);
+        CacheEntry e = peerToEntry.get(entry.peer);
+
+        if (e != null) {
+            if (entry.compareTo(e) > 0)
+                cacheEntries.remove(e);
+            else
+                return;
+        }
+
         cacheEntries.add(entry);
+        peerToEntry.put(entry.peer, entry);
 
         if (cacheEntries.size() > size) {
             cacheEntries.pollFirst();
         }
     }
 
-    public void removeEntriesFrom(Correspondent<T> peer) {
-        cacheEntries.removeIf(e -> e.peer.equals(peer));
+    public void removeEntryFrom(Correspondent<T> peer) {
+        CacheEntry e = peerToEntry.remove(peer);
+
+        if (e != null)
+            cacheEntries.remove(e);
     }
 
     public void merge(Cache<T> cache) {

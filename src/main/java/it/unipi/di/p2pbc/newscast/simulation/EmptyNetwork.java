@@ -66,7 +66,7 @@ public class EmptyNetwork<T> implements Network<T> {
         } else {
             Collections.shuffle(list);
             list.subList(0, -delta).forEach(e1 -> list.subList(-delta, list.size())
-                    .forEach(e2 -> e2.getCache().removeEntriesFrom(e1)));
+                    .forEach(e2 -> e2.getCache().removeEntryFrom(e1)));
             network.removeAll(list.subList(0, -delta));
         }
     }
