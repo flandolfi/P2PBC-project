@@ -7,42 +7,29 @@ import org.graphstream.graph.Node;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
-import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static org.graphstream.algorithm.Toolkit.averageClusteringCoefficient;
 import static org.graphstream.algorithm.Toolkit.averageDegree;
 
-public class AnalysisLogger extends NetworkLogger<Double> {
+public class NetworkStatsLogger extends NetworkLogger<Double> {
     private File statsLog;
 
-    public AnalysisLogger(String directory) {
+    public NetworkStatsLogger(String directory) {
         super(directory);
         statsLog = new File(directory + "/network-statistics.csv");
 
         try (Writer log = Files.newBufferedWriter(statsLog.toPath(), CREATE)) {
-            log.write(logData("Step",
-                    "ClustCoeff",
-                    "AvgInDegree",
-                    "AvgOutDegree",
-                    "ConnComponents",
-                    "AvgPathLength"));
+            log.write("Step,ClustCoeff,AvgInDegree,AvgOutDegree,ConnComponents,AvgPathLength\n");
         } catch (IOException e) {
             System.err.println("\nError: " + e.getMessage());
         }
     }
 
-    private String logData(Object... data) {
-        return Arrays.stream(data).map(Object::toString)
-                .collect(Collectors.joining(",", "", "\n"));
-    }
-
     @Override
     public void logNetworkState(Collection<Correspondent<Double>> network) {
-        System.out.println("LOG: NETWORK ANALYSIS LOGGER: Step " + step);
+        System.out.println("LOG: NETWORK ANALYSIS LOGGER: Step " + currentStep);
         loadGraph(network);
         System.out.print("LOG: -- Computing average clustering coefficient... ");
         double clusteringCoefficient = averageClusteringCoefficient(graph);
@@ -86,19 +73,12 @@ public class AnalysisLogger extends NetworkLogger<Double> {
 
         avgPathLengths /= graph.getNodeCount();
         System.out.print("\nLOG: -- Writing network statistics... ");
-
-        try (Writer log = Files.newBufferedWriter(statsLog.toPath(), APPEND)) {
-            log.write(logData(step,
-                    clusteringCoefficient,
-                    avgInDegree,
-                    avgOutDegree,
-                    connectedComponents,
-                    avgPathLengths));
-        } catch (IOException e) {
-            System.err.println("\nError: " + e.getMessage());
-        }
-
+        toCSV(statsLog,
+                clusteringCoefficient,
+                avgInDegree,
+                avgOutDegree,
+                connectedComponents,
+                avgPathLengths);
         System.out.println("Done");
-        step++;
     }
 }

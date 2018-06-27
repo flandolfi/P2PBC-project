@@ -13,39 +13,41 @@ import java.util.Collection;
 
 import static java.nio.file.StandardOpenOption.CREATE;
 
-public class NetworkLogger<T> implements Logger<T> {
+public class NetworkLogger<T> extends Logger<T> {
     protected SingleGraph graph = new SingleGraph("");
-    protected int step = 0;
     protected File root;
 
     public NetworkLogger(String directory) {
+        if (!new File(directory).isDirectory())
+            throw new IllegalArgumentException("Not a directory");
+
         root = new File(directory);
-        root.mkdirs();
     }
 
     protected void storeGraph() {
         System.out.print("LOG: -- Writing graph to GraphML file... ");
         FileSinkGraphML sink = new FileSinkGraphML();
 
-        try (Writer log = Files.newBufferedWriter(Paths.get(root.getPath() + "/network-" + step + ".xml"), CREATE)) {
+        try (Writer log = Files.newBufferedWriter(Paths.get(root.getPath() + "/network-" + currentStep + ".xml"), CREATE)) {
             sink.writeAll(graph, log);
         } catch (IOException e) {
             System.err.println("\nError: " + e.getMessage());
         }
 
         System.out.println("Done");
+        currentStep++;
     }
 
     protected void loadGraph(Collection<Correspondent<T>> network) {
-        graph = new SingleGraph("step-" + step, false, true);
+        graph = new SingleGraph("currentStep-" + currentStep, false, true);
         Integer nodeId = 0, edgeId = 0;
 
         for (Correspondent<T> n : network) {
             System.out.print("\rLOG: -- Creating graph model... " + ++nodeId + "/" + network.size());
-            graph.addNode(n.getAddress().toString()).setAttribute("value", n.getAgent().getNews());
+            graph.addNode(n.getId()).setAttribute("value", n.getAgent().getNews());
 
             for (Correspondent<T> e : n.getPeers()) {
-                graph.addEdge((edgeId++).toString(), n.getAddress().toString(), e.getAddress().toString());
+                graph.addEdge((edgeId++).toString(), n.getId(), e.getId());
             }
         }
 
@@ -54,9 +56,8 @@ public class NetworkLogger<T> implements Logger<T> {
 
     @Override
     public void logNetworkState(Collection<Correspondent<T>> network) {
-        System.out.println("LOG: NETWORK LOGGER: Step " + step);
+        System.out.println("LOG: NETWORK LOGGER: Step " + currentStep);
         loadGraph(network);
         storeGraph();
-        step++;
     }
 }
