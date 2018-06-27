@@ -36,7 +36,7 @@ public class Coordinator<T> {
                 }
             }
 
-            loggers.forEach(logger -> logger.logNetworkState(network));
+            loggers.forEach(logger -> logger.logNetworkState(this.network.getNodes()));
             lastUpdate = Instant.now();
 
             if (Correspondent.passiveUpdates())
