@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 
 public class Cache<T> {
     private class CacheEntry implements Comparable<CacheEntry> {
-        Correspondent<T> peer;
-        Instant timestamp;
-        T data;
+        final Correspondent<T> peer;
+        final Instant timestamp;
+        final T data;
 
         CacheEntry(Correspondent<T> peer, T data) {
             this.peer = peer;
@@ -18,7 +18,8 @@ public class Cache<T> {
 
         @Override
         public int compareTo(CacheEntry o) {
-            return timestamp.compareTo(o.timestamp);
+            return peer.equals(o.peer)? 0 : timestamp.equals(o.timestamp)?
+                    peer.getId().compareTo(o.peer.getId()) : timestamp.compareTo(o.timestamp);
         }
 
         @Override
@@ -51,7 +52,7 @@ public class Cache<T> {
         CacheEntry e = peerToEntry.get(entry.peer);
 
         if (e != null) {
-            if (entry.compareTo(e) > 0)
+            if (entry.timestamp.compareTo(e.timestamp) > 0)
                 cacheEntries.remove(e);
             else
                 return;
@@ -61,7 +62,7 @@ public class Cache<T> {
         peerToEntry.put(entry.peer, entry);
 
         if (cacheEntries.size() > size) {
-            cacheEntries.pollFirst();
+            peerToEntry.remove(cacheEntries.pollFirst().peer);
         }
     }
 
@@ -75,15 +76,16 @@ public class Cache<T> {
     public void merge(Cache<T> cache) {
         cacheEntries.forEach(cache::add);
         cacheEntries = new TreeSet<>(cache.cacheEntries);
+        peerToEntry = new HashMap<>(cache.peerToEntry);
+
     }
 
     public Set<Correspondent<T>> getPeers() {
-        return cacheEntries.stream().map(e -> e.peer)
-                .collect(Collectors.toSet());
+        return new HashSet<>(peerToEntry.keySet());
     }
 
     public List<T> getNews() {
-        return cacheEntries.stream().map(e -> e.data)
-                .collect(Collectors.toList());
+        return cacheEntries.stream().sorted(Comparator.comparing(l -> l.timestamp))
+                .map(e -> e.data).collect(Collectors.toList());
     }
 }
