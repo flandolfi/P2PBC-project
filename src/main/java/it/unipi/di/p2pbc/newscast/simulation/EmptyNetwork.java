@@ -37,8 +37,8 @@ public class EmptyNetwork<T> implements Network<T> {
     }
 
     @Override
-    public void resize(double factor) {
-        int delta = (int) ((factor - 1.)*network.size());
+    public void resize(int size) {
+        int delta = size - network.size();
 
         if (delta >= 0) {
             for (int i = 0; i < delta; i++)

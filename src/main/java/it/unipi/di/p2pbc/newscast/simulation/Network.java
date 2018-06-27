@@ -7,5 +7,5 @@ import java.util.Collection;
 public interface Network<T> {
     Collection<Correspondent<T>> getNodes();
     int size();
-    void resize(double factor);
+    void resize(int size);
 }
