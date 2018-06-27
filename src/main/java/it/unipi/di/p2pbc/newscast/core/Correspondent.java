@@ -1,6 +1,5 @@
 package it.unipi.di.p2pbc.newscast.core;
 
-import java.net.InetSocketAddress;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Random;
@@ -9,9 +8,9 @@ import java.util.Set;
 public class Correspondent<T> {
     private Agent<T> agent;
     private Cache<T> cache;
-    private InetSocketAddress address;
+    private String id;
     private Instant lastUpdate;
-    private static Random random = new Random(42);
+    private static Random random = new Random();
     private static boolean countPassiveUpdates = true;
 
     public static void setPassiveUpdates(boolean countPassiveUpdates) {
@@ -22,8 +21,8 @@ public class Correspondent<T> {
         return countPassiveUpdates;
     }
 
-    public Correspondent(InetSocketAddress address, Agent<T> agent) {
-        this.address = address;
+    public Correspondent(String id, Agent<T> agent) {
+        this.id = id;
         this.agent = agent;
         this.cache = new Cache<>();
         this.lastUpdate = Instant.now();
@@ -37,16 +36,16 @@ public class Correspondent<T> {
         this.agent = agent;
     }
 
-    public InetSocketAddress getAddress() {
-        return address;
+    public String getId() {
+        return id;
     }
 
     public Cache<T> getCache() {
         return cache;
     }
 
-    public void setAddress(InetSocketAddress address) {
-        this.address = address;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Instant getLastUpdate() {
@@ -84,7 +83,7 @@ public class Correspondent<T> {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Correspondent) {
-            return address.equals(((Correspondent) obj).address);
+            return id.equals(((Correspondent) obj).id);
         }
 
         return false;
@@ -92,7 +91,7 @@ public class Correspondent<T> {
 
     @Override
     public int hashCode() {
-        return address.hashCode();
+        return id.hashCode();
     }
 }
 
