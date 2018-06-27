@@ -8,7 +8,7 @@ public class ScaleFreeNetwork<T> extends RandomNetwork<T> {
         int totalEdges = initialSize*(initialSize - 1)/2;
 
         for (int i = initialSize; i < finalSize; i++) {
-            Correspondent<T> peer = addRandomPeer();
+            Correspondent<T> peer = addPeer();
 
             for (Correspondent<T> node : network)
                 if (!node.equals(peer) && random.nextFloat() < (float) node.getPeers().size()/totalEdges)

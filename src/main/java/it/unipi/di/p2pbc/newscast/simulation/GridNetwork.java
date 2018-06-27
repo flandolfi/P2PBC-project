@@ -9,7 +9,7 @@ public class GridNetwork<T> extends EmptyNetwork<T> {
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                Correspondent<T> corr = addRandomPeer();
+                Correspondent<T> corr = addPeer();
                 matrix[i][j] = corr;
 
                 if (i > 0) {

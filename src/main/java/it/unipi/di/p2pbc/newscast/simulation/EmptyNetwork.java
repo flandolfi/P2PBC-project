@@ -2,15 +2,13 @@ package it.unipi.di.p2pbc.newscast.simulation;
 
 import it.unipi.di.p2pbc.newscast.core.Correspondent;
 
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.util.*;
 
 public class EmptyNetwork<T> implements Network<T> {
-    protected HashSet<Correspondent<T>> network = new HashSet<>();
+    protected ArrayList<Correspondent<T>> network = new ArrayList<>();
     protected Random random = new Random();
     protected AgentFactory<T> agentFactory;
+    protected Integer nodeId = 0;
 
     protected EmptyNetwork(AgentFactory<T> agentFactory) {
         this.agentFactory = agentFactory;
@@ -21,30 +19,15 @@ public class EmptyNetwork<T> implements Network<T> {
         right.getCache().add(left, left.getAgent().getNews());
     }
 
-    protected InetSocketAddress generateAddress() {
-        InetSocketAddress result = null;
-        byte[] bytes = new byte[4];
-        random.nextBytes(bytes);
-
-        try {
-            result = new InetSocketAddress(InetAddress.getByAddress(bytes), random.nextInt(65536));
-        } catch (UnknownHostException ignore) {}
-
-        return result;
-    }
-
-    public Correspondent<T> addRandomPeer() {
-        Correspondent<T> peer;
-
-        do {
-            peer = new Correspondent<>(generateAddress(), agentFactory.createAgent());
-        } while (!network.add(peer));
+    protected Correspondent<T> addPeer() {
+        Correspondent<T> peer = new Correspondent<>((nodeId++).toString(), agentFactory.createAgent());
+        network.add(peer);
 
         return peer;
     }
 
     @Override
-    public Set<Correspondent<T>> getNodes() {
+    public List<Correspondent<T>> getNodes() {
         return network;
     }
 
@@ -54,20 +37,17 @@ public class EmptyNetwork<T> implements Network<T> {
     }
 
     @Override
-    public void resize(float factor) {
-        int delta = (int) (factor - 1.)*network.size();
-        ArrayList<Correspondent<T>> list = new ArrayList<>(network);
+    public void resize(double factor) {
+        int delta = (int) ((factor - 1.)*network.size());
 
         if (delta >= 0) {
-            for (int i = 0; i < delta; i++) {
-                Correspondent<T> peer = addRandomPeer();
-                peer.update(list.get(random.nextInt(list.size())));
-            }
+            for (int i = 0; i < delta; i++)
+                addPeer().update(network.get(random.nextInt(network.size())));
         } else {
-            Collections.shuffle(list);
-            list.subList(0, -delta).forEach(e1 -> list.subList(-delta, list.size())
+            Collections.shuffle(network);
+            network.subList(0, -delta).forEach(e1 -> network.subList(-delta, network.size())
                     .forEach(e2 -> e2.getCache().removeEntryFrom(e1)));
-            network.removeAll(list.subList(0, -delta));
+            network.removeAll(network.subList(0, -delta));
         }
     }
 }
