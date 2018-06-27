@@ -2,10 +2,10 @@ package it.unipi.di.p2pbc.newscast.simulation;
 
 import it.unipi.di.p2pbc.newscast.core.Correspondent;
 
-import java.util.Set;
+import java.util.Collection;
 
 public interface Network<T> {
-    Set<Correspondent<T>> getNodes();
+    Collection<Correspondent<T>> getNodes();
     int size();
-    void resize(float factor);
+    void resize(double factor);
 }
