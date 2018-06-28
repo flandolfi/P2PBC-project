@@ -3,7 +3,6 @@ package it.unipi.di.p2pbc.newscast.simulation;
 import it.unipi.di.p2pbc.newscast.core.Correspondent;
 import org.graphstream.algorithm.ConnectedComponents;
 import org.graphstream.algorithm.Dijkstra;
-import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
 import java.io.*;
@@ -16,8 +15,8 @@ import static org.graphstream.algorithm.Toolkit.averageClusteringCoefficient;
 import static org.graphstream.algorithm.Toolkit.averageDegree;
 
 public class NetworkStatsLogger extends NewsLogger<Double> {
-    public NetworkStatsLogger(String directory) {
-        super(directory);
+    public NetworkStatsLogger(String filePath) {
+        super(filePath);
 
         try (Writer writer = Files.newBufferedWriter(log.toPath(), CREATE, TRUNCATE_EXISTING)) {
             writer.write("Step,ClustCoeff,AvgInDegree,AvgOutDegree,ConnComponents,AvgPathLength\n");
@@ -50,26 +49,25 @@ public class NetworkStatsLogger extends NewsLogger<Double> {
         double connectedComponents = cc.getConnectedComponentsCount();
         log("Done\n");
 
-        int nodeId = 0;
         double avgPathLengths = 0.;
         Dijkstra dijkstra = new Dijkstra();
         dijkstra.init(graph);
 
-        for (Node n : graph.getNodeSet()) {
-            log("\rLOG: Computing shortest paths... " + ++nodeId + "/" + network.size());
-            dijkstra.setSource(n);
+        for (int i = 0; i < graph.getNodeCount(); i++) {
+            log("\rLOG: Computing shortest paths... " + (i + 1) + "/" + network.size());
+            dijkstra.setSource(graph.getNode(i));
             dijkstra.compute();
 
             double totalPathLength = 0.;
 
-            for (Node target : graph.getNodeSet()) {
-                totalPathLength += dijkstra.getPathLength(target);
+            for (int j = i + 1; j < graph.getNodeCount(); j++) {
+                totalPathLength += dijkstra.getPathLength(graph.getNode(j));
             }
 
-            avgPathLengths += totalPathLength/graph.getNodeCount();
+            avgPathLengths += totalPathLength;
         }
 
-        avgPathLengths /= graph.getNodeCount();
+        avgPathLengths /= graph.getNodeCount()*(graph.getNodeCount() - 1)*0.5;
         log("\nLOG: Writing network statistics... ");
         toCSV(clusteringCoefficient,
                 avgInDegree,
