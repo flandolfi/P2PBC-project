@@ -6,11 +6,11 @@ import java.util.*;
 
 public class EmptyNetwork<T> implements Network<T> {
     protected ArrayList<Correspondent<T>> network = new ArrayList<>();
-    protected Random random = new Random();
+    protected SplittableRandom random = new SplittableRandom();
     protected AgentFactory<T> agentFactory;
     protected Integer nodeId = 0;
 
-    protected EmptyNetwork(AgentFactory<T> agentFactory) {
+    public EmptyNetwork(AgentFactory<T> agentFactory) {
         this.agentFactory = agentFactory;
     }
 
@@ -41,8 +41,12 @@ public class EmptyNetwork<T> implements Network<T> {
         int delta = size - network.size();
 
         if (delta >= 0) {
-            for (int i = 0; i < delta; i++)
-                addPeer().update(network.get(random.nextInt(network.size())));
+            for (int i = 0; i < delta; i++) {
+                Correspondent<T> peer = addPeer();
+
+                if (network.size() > 1)
+                    peer.update(network.get(random.nextInt(network.size() - 1)));
+            }
         } else {
             Collections.shuffle(network);
             network.subList(0, -delta).forEach(e1 -> network.subList(-delta, network.size())
