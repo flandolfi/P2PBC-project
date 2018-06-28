@@ -2,15 +2,15 @@ package it.unipi.di.p2pbc.newscast.core;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Set;
+import java.util.SplittableRandom;
 
 public class Correspondent<T> {
     private Agent<T> agent;
     private Cache<T> cache;
     private String id;
     private Instant lastUpdate;
-    private static Random random = new Random();
+    private static SplittableRandom random = new SplittableRandom();
     private static boolean countPassiveUpdates = true;
 
     public static void setPassiveUpdates(boolean countPassiveUpdates) {
