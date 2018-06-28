@@ -12,52 +12,50 @@ import java.nio.file.Paths;
 import java.util.Collection;
 
 import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 
 public class NetworkLogger<T> extends Logger<T> {
-    protected SingleGraph graph = new SingleGraph("");
     protected File root;
+    protected int id = 0;
 
     public NetworkLogger(String directory) {
-        if (!new File(directory).isDirectory())
-            throw new IllegalArgumentException("Not a directory");
-
         root = new File(directory);
+        root.mkdirs();
     }
 
-    protected void storeGraph() {
-        System.out.print("LOG: -- Writing graph to GraphML file... ");
+    public static void storeGraph(SingleGraph graph, File directory) {
+        log("LOG: Writing graph to GraphML file... ");
         FileSinkGraphML sink = new FileSinkGraphML();
 
-        try (Writer log = Files.newBufferedWriter(Paths.get(root.getPath() + "/network-" + currentStep + ".xml"), CREATE)) {
-            sink.writeAll(graph, log);
+        try (Writer writer = Files.newBufferedWriter(Paths.get(directory.getPath() + "/network-" + graph.getId() + ".xml"), CREATE, TRUNCATE_EXISTING)) {
+            sink.writeAll(graph, writer);
         } catch (IOException e) {
             System.err.println("\nError: " + e.getMessage());
         }
 
-        System.out.println("Done");
-        currentStep++;
+        log("Done\n");
     }
 
-    protected void loadGraph(Collection<Correspondent<T>> network) {
-        graph = new SingleGraph("currentStep-" + currentStep, false, true);
+    public static <S> SingleGraph loadGraph(Collection<Correspondent<S>> network, String id) {
+        SingleGraph graph = new SingleGraph(id, false, true);
         Integer nodeId = 0, edgeId = 0;
 
-        for (Correspondent<T> n : network) {
-            System.out.print("\rLOG: -- Creating graph model... " + ++nodeId + "/" + network.size());
+        for (Correspondent<S> n : network) {
+            log("\rLOG: Creating graph model... " + ++nodeId + "/" + network.size());
             graph.addNode(n.getId()).setAttribute("value", n.getAgent().getNews());
 
-            for (Correspondent<T> e : n.getPeers()) {
+            for (Correspondent<S> e : n.getPeers()) {
                 graph.addEdge((edgeId++).toString(), n.getId(), e.getId());
             }
         }
 
-        System.out.println();
+        log("\n");
+
+        return graph;
     }
 
     @Override
     public void logNetworkState(Collection<Correspondent<T>> network) {
-        System.out.println("LOG: NETWORK LOGGER: Step " + currentStep);
-        loadGraph(network);
-        storeGraph();
+        storeGraph(loadGraph(network, "network-" + id++), root);
     }
 }

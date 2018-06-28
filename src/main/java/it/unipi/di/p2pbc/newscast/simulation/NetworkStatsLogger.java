@@ -4,24 +4,23 @@ import it.unipi.di.p2pbc.newscast.core.Correspondent;
 import org.graphstream.algorithm.ConnectedComponents;
 import org.graphstream.algorithm.Dijkstra;
 import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.SingleGraph;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Collection;
 
 import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 import static org.graphstream.algorithm.Toolkit.averageClusteringCoefficient;
 import static org.graphstream.algorithm.Toolkit.averageDegree;
 
-public class NetworkStatsLogger extends NetworkLogger<Double> {
-    private File statsLog;
-
+public class NetworkStatsLogger extends NewsLogger<Double> {
     public NetworkStatsLogger(String directory) {
         super(directory);
-        statsLog = new File(directory + "/network-statistics.csv");
 
-        try (Writer log = Files.newBufferedWriter(statsLog.toPath(), CREATE)) {
-            log.write("Step,ClustCoeff,AvgInDegree,AvgOutDegree,ConnComponents,AvgPathLength\n");
+        try (Writer writer = Files.newBufferedWriter(log.toPath(), CREATE, TRUNCATE_EXISTING)) {
+            writer.write("Step,ClustCoeff,AvgInDegree,AvgOutDegree,ConnComponents,AvgPathLength\n");
         } catch (IOException e) {
             System.err.println("\nError: " + e.getMessage());
         }
@@ -29,12 +28,11 @@ public class NetworkStatsLogger extends NetworkLogger<Double> {
 
     @Override
     public void logNetworkState(Collection<Correspondent<Double>> network) {
-        System.out.println("LOG: NETWORK ANALYSIS LOGGER: Step " + currentStep);
-        loadGraph(network);
-        System.out.print("LOG: -- Computing average clustering coefficient... ");
+        SingleGraph graph = NetworkLogger.loadGraph(network, "");
+        log("LOG: Computing average clustering coefficient... ");
         double clusteringCoefficient = averageClusteringCoefficient(graph);
-        System.out.println("Done");
-        System.out.print("LOG: -- Computing average node degrees... ");
+        log("Done\n");
+        log("LOG: Computing average node degrees... ");
 
         double avgOutDegree = 0.;
 
@@ -45,12 +43,12 @@ public class NetworkStatsLogger extends NetworkLogger<Double> {
         avgOutDegree /= network.size();
 
         double avgInDegree = averageDegree(graph) - avgOutDegree;
-        System.out.println("Done");
-        System.out.print("LOG: -- Computing connected components... ");
+        log("Done\n");
+        log("LOG: Computing connected components... ");
         ConnectedComponents cc = new ConnectedComponents();
         cc.init(graph);
         double connectedComponents = cc.getConnectedComponentsCount();
-        System.out.println("Done");
+        log("Done\n");
 
         int nodeId = 0;
         double avgPathLengths = 0.;
@@ -58,7 +56,7 @@ public class NetworkStatsLogger extends NetworkLogger<Double> {
         dijkstra.init(graph);
 
         for (Node n : graph.getNodeSet()) {
-            System.out.print("\rLOG: -- Computing shortest paths... " + ++nodeId + "/" + network.size());
+            log("\rLOG: Computing shortest paths... " + ++nodeId + "/" + network.size());
             dijkstra.setSource(n);
             dijkstra.compute();
 
@@ -72,13 +70,12 @@ public class NetworkStatsLogger extends NetworkLogger<Double> {
         }
 
         avgPathLengths /= graph.getNodeCount();
-        System.out.print("\nLOG: -- Writing network statistics... ");
-        toCSV(statsLog,
-                clusteringCoefficient,
+        log("\nLOG: Writing network statistics... ");
+        toCSV(clusteringCoefficient,
                 avgInDegree,
                 avgOutDegree,
                 connectedComponents,
                 avgPathLengths);
-        System.out.println("Done");
+        log("Done\n");
     }
 }

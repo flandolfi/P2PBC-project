@@ -4,19 +4,35 @@ import it.unipi.di.p2pbc.newscast.core.Correspondent;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
+
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 
 public class NewsLogger<T> extends Logger<T> {
-    protected File newsLog;
+    protected File log;
+    protected int currentStep = 0;
 
-    public NewsLogger(String directory) {
-        if (!new File(directory).isDirectory())
-            throw new IllegalArgumentException("Not a directory");
+    public NewsLogger(String filePath) {
+        log = new File(filePath);
+        log.getParentFile().mkdirs();
 
-        newsLog = new File(directory + "/news.csv");
+        try (Writer writer = Files.newBufferedWriter(log.toPath(), CREATE, TRUNCATE_EXISTING)) {
+            writer.write("");
+        } catch (IOException e) {
+            System.err.println("\nError: " + e.getMessage());
+        }
+    }
 
-        try {
-            newsLog.createNewFile();
+    protected void toCSV(Object... data) {
+        try (Writer writer = Files.newBufferedWriter(log.toPath(), APPEND)) {
+            writer.write(Arrays.stream(data).map(Object::toString)
+                    .collect(Collectors.joining(",", currentStep++ + ",", "\n")));
         } catch (IOException e) {
             System.err.println("\nError: " + e.getMessage());
         }
@@ -24,9 +40,8 @@ public class NewsLogger<T> extends Logger<T> {
 
     @Override
     public void logNetworkState(Collection<Correspondent<T>> network) {
-        System.out.println("LOG: NEWS LOGGER: Step " + currentStep);
-        System.out.print("LOG: -- Writing news... ");
-        toCSV(newsLog, network.stream().map(n -> n.getAgent().getNews()).toArray());
-        System.out.println("Done");
+        log("LOG: Writing news... ");
+        toCSV(network.stream().map(n -> n.getAgent().getNews()).toArray());
+        log("Done\n");
     }
 }

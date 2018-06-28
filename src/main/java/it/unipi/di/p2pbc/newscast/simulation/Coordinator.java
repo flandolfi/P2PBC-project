@@ -26,7 +26,9 @@ public class Coordinator<T> {
         if (shuffle)
             Collections.shuffle(network);
 
-        for (int i = 0; i < steps; i++) {
+        for (int i = 1; i <= steps; i++) {
+            System.out.println("NEWSCAST: Simulating step " + i + " of " + steps);
+
             for (Correspondent<T> node: network) {
                 if (node.getLastUpdate().compareTo(lastUpdate) <= 0) {
                     Correspondent<T> peer = node.selectPeer();
