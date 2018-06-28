@@ -27,7 +27,7 @@ public class NetworkLogger<T> extends Logger<T> {
         log("LOG: Writing graph to GraphML file... ");
         FileSinkGraphML sink = new FileSinkGraphML();
 
-        try (Writer writer = Files.newBufferedWriter(Paths.get(directory.getPath() + "/network-" + graph.getId() + ".xml"), CREATE, TRUNCATE_EXISTING)) {
+        try (Writer writer = Files.newBufferedWriter(Paths.get(directory.getPath() + "/" + graph.getId() + ".xml"), CREATE, TRUNCATE_EXISTING)) {
             sink.writeAll(graph, writer);
         } catch (IOException e) {
             System.err.println("\nError: " + e.getMessage());
