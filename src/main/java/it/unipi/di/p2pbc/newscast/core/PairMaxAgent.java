@@ -2,10 +2,10 @@ package it.unipi.di.p2pbc.newscast.core;
 
 import java.util.List;
 
-public class MaxAgent implements Agent<Double> {
+public class PairMaxAgent implements Agent<Double> {
     private Double value;
 
-    public MaxAgent(Double value) {
+    public PairMaxAgent(Double value) {
         this.value = value;
     }
 
@@ -16,6 +16,6 @@ public class MaxAgent implements Agent<Double> {
 
     @Override
     public void updateNews(List<Double> news) {
-        news.forEach(v -> value = Math.max(value, v));
+        value = Math.max(value, news.get(news.size() - 1));
     }
 }
