@@ -16,6 +16,6 @@ public class MaxAgent implements Agent<Double> {
 
     @Override
     public void updateNews(List<Double> news) {
-        news.forEach(v -> value = Math.max(value, v));
+        value = Math.max(value, news.get(news.size() - 1));
     }
 }

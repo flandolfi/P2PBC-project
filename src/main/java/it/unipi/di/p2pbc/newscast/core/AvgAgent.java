@@ -2,10 +2,10 @@ package it.unipi.di.p2pbc.newscast.core;
 
 import java.util.List;
 
-public class PairAvgAgent implements Agent<Double> {
+public class AvgAgent implements Agent<Double> {
     private Double value;
 
-    public PairAvgAgent(Double value) {
+    public AvgAgent(Double value) {
         this.value = value;
     }
 
