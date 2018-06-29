@@ -19,7 +19,7 @@ public class NetworkStatsLogger extends NewsLogger<Double> {
         super(filePath);
 
         try (Writer writer = Files.newBufferedWriter(log.toPath(), CREATE, TRUNCATE_EXISTING)) {
-            writer.write("Step,ClustCoeff,AvgInDegree,AvgOutDegree,ConnComponents,AvgPathLength\n");
+            writer.write("Step,ClustCoeff,AvgInDegree,AvgOutDegree,ConnComponents,LargestConnComponent,AvgPathLength\n");
         } catch (IOException e) {
             System.err.println("\nError: " + e.getMessage());
         }
@@ -47,6 +47,7 @@ public class NetworkStatsLogger extends NewsLogger<Double> {
         ConnectedComponents cc = new ConnectedComponents();
         cc.init(graph);
         double connectedComponents = cc.getConnectedComponentsCount();
+        int largestConnectedComponentSize = cc.getGiantComponent() == null? 0 : cc.getGiantComponent().size();
         log("Done\n");
 
         double avgPathLengths = 0.;
@@ -73,6 +74,7 @@ public class NetworkStatsLogger extends NewsLogger<Double> {
                 avgInDegree,
                 avgOutDegree,
                 connectedComponents,
+                largestConnectedComponentSize,
                 avgPathLengths);
         log("Done\n");
     }
