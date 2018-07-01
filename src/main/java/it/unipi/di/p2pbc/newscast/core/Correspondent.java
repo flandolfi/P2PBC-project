@@ -11,7 +11,7 @@ public class Correspondent<T> {
     private String id;
     private Instant lastUpdate;
     private static SplittableRandom random = new SplittableRandom();
-    private static boolean countPassiveUpdates = true;
+    private static boolean countPassiveUpdates = false;
 
     public static void setPassiveUpdates(boolean countPassiveUpdates) {
         Correspondent.countPassiveUpdates = countPassiveUpdates;
