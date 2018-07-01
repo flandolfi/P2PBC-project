@@ -37,12 +37,9 @@ class AgentTest {
         for (int i = 0; i < elements; i++) {
             value = random.nextDouble();
             news.add(value);
-
-            if (value > max) {
-                max = value;
-            }
         }
 
+        max = Math.max(max, value);
         avg = 0.5*(avg + value);
         maxAgent.updateNews(news);
         avgAgent.updateNews(news);

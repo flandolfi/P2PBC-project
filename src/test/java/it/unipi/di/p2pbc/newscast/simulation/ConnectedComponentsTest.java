@@ -2,7 +2,7 @@ package it.unipi.di.p2pbc.newscast.simulation;
 
 import it.unipi.di.p2pbc.newscast.core.Cache;
 import it.unipi.di.p2pbc.newscast.core.ConstAgent;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ConnectedComponentsTest {
     @Test

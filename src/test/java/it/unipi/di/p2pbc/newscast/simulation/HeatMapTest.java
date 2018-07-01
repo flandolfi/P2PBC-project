@@ -1,14 +1,14 @@
 package it.unipi.di.p2pbc.newscast.simulation;
 
 import it.unipi.di.p2pbc.newscast.core.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class HeatMapTest {
     private String directory = "./data/heatmap/";
 
     @Test
     public void estimatePi() {
-        int radius = 200;
+        int radius = 100;
         Coordinator<Double> coordinator = new Coordinator<>(
                 new GridNetwork<>(radius, radius, new AgentFactory<>() {
                     int row = 0;
@@ -16,10 +16,10 @@ public class HeatMapTest {
 
                     @Override
                     public Agent<Double> createAgent() {
-                        double value = row*row + col*col > radius*radius? 0. : 1.;
+                        double value = row*row + col*col > (radius - 1)*(radius - 1)? 0. : 1.;
                         col++;
 
-                        if (col > radius) {
+                        if (col >= radius) {
                             col = 0;
                             row++;
                         }
@@ -34,7 +34,7 @@ public class HeatMapTest {
 
     @Test
     public void heatDiffusion() {
-        int rows = 200;
+        int rows = 100;
         int cols = 100;
 
         Coordinator<Double> coordinator = new Coordinator<>(
@@ -53,7 +53,7 @@ public class HeatMapTest {
 
     @Test
     public void sizeEstimation() {
-        int rows = 200;
+        int rows = 100;
         int cols = 100;
 
         Coordinator<Double> coordinator = new Coordinator<>(
@@ -72,7 +72,7 @@ public class HeatMapTest {
 
     @Test
     public void epidemic() {
-        int rows = 200;
+        int rows = 100;
         int cols = 100;
 
         Coordinator<Double> coordinator = new Coordinator<>(

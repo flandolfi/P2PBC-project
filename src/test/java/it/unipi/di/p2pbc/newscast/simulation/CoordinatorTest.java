@@ -6,11 +6,10 @@ import it.unipi.di.p2pbc.newscast.core.Cache;
 import org.junit.jupiter.api.Test;
 
 class CoordinatorTest {
-    String dataRoot = "./data/";
+    private String directory = "./data/simulate-test/";
 
     @Test
     void simulate() {
-        String directory = dataRoot + "simulate-test/";
         Cache.setSize(20);
         int rows = 10;
         int cols = 30;

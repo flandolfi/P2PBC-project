@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class BootstrapTest {
-    String directory = "./data/bootstrap/";
+    private String directory = "./data/bootstrap/";
 
     @BeforeAll
     static void init() {
@@ -58,21 +58,5 @@ public class BootstrapTest {
         }
 
         coordinator.simulate(30, false);
-    }
-
-    @Test
-    void damaged() {
-        Network<Double> network = new RandomNetwork<>(1000, 0.4, () -> new ConstAgent(0.));
-        Coordinator<Double> coordinator = new Coordinator<>(network,
-                new NetworkStatsLogger(directory + "damaged.csv"));
-        coordinator.simulate(20);
-
-        for (int i = 0; i < 20; i++) {
-            network.resize(900);
-            network.resize(1000);
-            coordinator.simulate(1, false);
-        }
-
-        coordinator.simulate(60);
     }
 }
