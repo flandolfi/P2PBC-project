@@ -15,6 +15,10 @@ public class Coordinator<T> {
         this.loggers.forEach(logger -> logger.logNetworkState(network.getNodes()));
     }
 
+    public Network<T> getNetwork() {
+        return network;
+    }
+
     public void simulate(int steps) {
         simulate(steps, true);
     }
