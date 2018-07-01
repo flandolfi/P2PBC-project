@@ -38,6 +38,14 @@ public class NewsLogger<T> extends Logger<T> {
         }
     }
 
+    public void setCurrentStep(int step) {
+        this.currentStep = step;
+    }
+
+    public int getCurrentStep() {
+        return currentStep;
+    }
+
     @Override
     public void logNetworkState(Collection<Correspondent<T>> network) {
         log("LOG: Writing news... ");
