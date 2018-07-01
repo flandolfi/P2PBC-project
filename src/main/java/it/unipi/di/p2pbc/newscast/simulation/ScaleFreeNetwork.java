@@ -4,10 +4,18 @@ import it.unipi.di.p2pbc.newscast.core.Correspondent;
 
 public class ScaleFreeNetwork<T> extends RandomNetwork<T> {
     public ScaleFreeNetwork(int size, AgentFactory<T> agentFactory) {
-        this(2, size, agentFactory);
+        this(2, size, true,  agentFactory);
     }
 
     public ScaleFreeNetwork(int initialSize, int finalSize, AgentFactory<T> agentFactory) {
+        this(initialSize, finalSize, true, agentFactory);
+    }
+
+    public ScaleFreeNetwork(int size, boolean redraw, AgentFactory<T> agentFactory) {
+        this(2, size, redraw,  agentFactory);
+    }
+
+    public ScaleFreeNetwork(int initialSize, int finalSize, boolean redraw, AgentFactory<T> agentFactory) {
         super(initialSize, 1., agentFactory);
 
         if (initialSize < 2)
@@ -18,10 +26,11 @@ public class ScaleFreeNetwork<T> extends RandomNetwork<T> {
         for (int i = initialSize; i < finalSize; i++) {
             Correspondent<T> peer = addPeer();
 
-            while (peer.getPeers().size() == 0)
+            do {
                 for (Correspondent<T> node : network)
-                    if (!node.equals(peer) && random.nextDouble() < (double) node.getPeers().size()/totalEdges)
+                    if (!node.equals(peer) && random.nextDouble() < (double) node.getPeers().size() / totalEdges)
                         link(peer, node);
+            } while (redraw && peer.getPeers().size() == 0);
 
             totalEdges += peer.getPeers().size()*2;
         }
