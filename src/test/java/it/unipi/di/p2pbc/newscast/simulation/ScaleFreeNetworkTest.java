@@ -15,7 +15,7 @@ public class ScaleFreeNetworkTest {
             NetworkStatsLogger logger = new NetworkStatsLogger(path + "cache-" + c + ".csv");
 
             for (int exp = 10; exp < 14; exp++) {
-                Network<Double> network = new ScaleFreeNetwork<>(1 << exp, () -> agent);
+                Network<Double> network = new ScaleFreeNetwork<>(1 << exp, id -> agent);
                 Coordinator<Double> coordinator = new Coordinator<>(network);
                 coordinator.simulate(50);
                 logger.setCurrentStep(1 << exp);
@@ -33,7 +33,7 @@ public class ScaleFreeNetworkTest {
         for (Integer c : new int[]{20, 40, 80}) {
             Cache.setSize(c);
             NetworkStatsLogger logger = new NetworkStatsLogger(path + "cache-" + c + ".csv");
-            Network<Double> network = new ScaleFreeNetwork<>(size, () -> agent);
+            Network<Double> network = new ScaleFreeNetwork<>(size, id -> agent);
             Coordinator<Double> coordinator = new Coordinator<>(network);
             coordinator.simulate(50);
 

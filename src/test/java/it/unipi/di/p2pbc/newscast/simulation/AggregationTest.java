@@ -19,9 +19,8 @@ public class AggregationTest {
             NewsStatsLogger logger = new NewsStatsLogger(directory + "diffusion-N" + size + "-stats.csv", 1./size, 0.001);
 
             for (int j = 0; j < 5; j++) {
-                Coordinator<Double> coordinator = new Coordinator<>(new LatticeNetwork<>(size, () -> new AvgAgent(0.)));
+                Coordinator<Double> coordinator = new Coordinator<>(new LatticeNetwork<>(size, id -> new AvgAgent(id > 0? 0. : 1.)));
                 coordinator.simulate(50);
-                coordinator.getNetwork().getNodes().get(0).setAgent(new AvgAgent(1.));
                 coordinator = new Coordinator<>(coordinator.getNetwork(), logger);
                 coordinator.simulate(50);
                 logger.setCurrentStep(0);
@@ -39,7 +38,7 @@ public class AggregationTest {
             NewsStatsLogger logger = new NewsStatsLogger(directory + "avg-C" + c + "-stats.csv", 0.);
 
             for (int i = 0; i < 50; i++) {
-                Network<Double> network = new LatticeNetwork<>(size, () -> new AvgAgent(0.));
+                Network<Double> network = new LatticeNetwork<>(size, id -> new AvgAgent(0.));
                 Coordinator<Double> coordinator = new Coordinator<>(network);
                 coordinator.simulate(50);
                 network.getNodes().forEach(n -> n.setAgent(new AvgAgent(random.nextGaussian())));
@@ -59,9 +58,8 @@ public class AggregationTest {
             NewsLogger<Double> logger = new NewsStatsLogger(directory + "max-C" + c + "-stats.csv", 1.);
 
             for (int i = 0; i < 10; i++) {
-                Coordinator<Double> coordinator = new Coordinator<>(new LatticeNetwork<>(size, () -> new MaxAgent(0.)));
+                Coordinator<Double> coordinator = new Coordinator<>(new LatticeNetwork<>(size, id -> new MaxAgent(id > 0? 0. : 1.)));
                 coordinator.simulate(50);
-                coordinator.getNetwork().getNodes().get(0).setAgent(new MaxAgent(1.));
                 coordinator = new Coordinator<>(coordinator.getNetwork(), logger);
                 coordinator.simulate(12);
                 logger.setCurrentStep(0);

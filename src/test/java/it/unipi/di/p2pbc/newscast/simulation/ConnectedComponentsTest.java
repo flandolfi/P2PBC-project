@@ -13,7 +13,7 @@ public class ConnectedComponentsTest {
             int cache = 1 << c;
             Cache.setSize(cache);
             Coordinator<Double> coordinator = new Coordinator<>(
-                    new ScaleFreeNetwork<>(1024, () -> new ConstAgent(0.)),
+                    new ScaleFreeNetwork<>(1024, id -> new ConstAgent(0.)),
                     new NetworkStatsLogger(directory + "cache-C" + cache + ".csv"));
             coordinator.simulate(20);
         }

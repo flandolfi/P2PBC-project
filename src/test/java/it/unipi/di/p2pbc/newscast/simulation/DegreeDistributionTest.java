@@ -8,11 +8,11 @@ public class DegreeDistributionTest {
     @Test
     public void randomNetworks() {
         String path = "./data/degree-distributions/random.csv";
-        DegreeDistributionLogger logger = new DegreeDistributionLogger(path);
+        DegreeDistributionLogger logger = new DegreeDistributionLogger(path, false);
 
         for (int c = 10; c <= 40; c += 10) {
             Cache.setSize(c);
-            Network<Double> network = new RandomNetwork<>(80, 0.5, () -> new ConstAgent(0.));
+            Network<Double> network = new RandomNetwork<>(80, 0.5, id -> new ConstAgent(0.));
             logger.setCurrentStep(c);
             logger.logNetworkState(network.getNodes());
         }
@@ -21,11 +21,11 @@ public class DegreeDistributionTest {
     @Test
     public void scaleFreeNetworks() {
         String path = "./data/degree-distributions/scale-free.csv";
-        DegreeDistributionLogger logger = new DegreeDistributionLogger(path);
+        DegreeDistributionLogger logger = new DegreeDistributionLogger(path, false);
 
         for (int c = 10; c <= 40; c += 10) {
             Cache.setSize(c);
-            Network<Double> network = new ScaleFreeNetwork<>(1 << 14, () -> new ConstAgent(0.));
+            Network<Double> network = new ScaleFreeNetwork<>(1 << 14, id -> new ConstAgent(0.));
             logger.setCurrentStep(c);
             logger.logNetworkState(network.getNodes());
         }

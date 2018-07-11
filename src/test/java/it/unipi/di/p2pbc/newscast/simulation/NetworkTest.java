@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class NetworkTest {
     @Test
     void resize() {
-        EmptyNetwork<Double> network = new EmptyNetwork<>(() -> new ConstAgent(0.));
+        EmptyNetwork<Double> network = new EmptyNetwork<>(id -> new ConstAgent(0.));
         network.resize(5);
         assertEquals(5, network.size());
         network.resize(10);

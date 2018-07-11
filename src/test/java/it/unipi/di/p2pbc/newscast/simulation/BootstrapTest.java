@@ -16,7 +16,7 @@ public class BootstrapTest {
     @Test
     void lattice() {
         Coordinator<Double> coordinator = new Coordinator<>(
-                new LatticeNetwork<>(1000, () -> new ConstAgent(0.)),
+                new LatticeNetwork<>(1000, id -> new ConstAgent(0.)),
                 new NetworkStatsLogger(directory + "lattice.csv"));
         coordinator.simulate(50);
     }
@@ -24,7 +24,7 @@ public class BootstrapTest {
     @Test
     void random() {
         Coordinator<Double> coordinator = new Coordinator<>(
-                new RandomNetwork<>(1000, 0.4, () -> new ConstAgent(0.)),
+                new RandomNetwork<>(1000, 0.4, id -> new ConstAgent(0.)),
                 new NetworkStatsLogger(directory + "random.csv"));
         coordinator.simulate(50);
     }
@@ -32,7 +32,7 @@ public class BootstrapTest {
     @Test
     void scaleFree() {
         Coordinator<Double> coordinator = new Coordinator<>(
-                new ScaleFreeNetwork<>(1000, () -> new ConstAgent(0.)),
+                new ScaleFreeNetwork<>(1000, id -> new ConstAgent(0.)),
                 new NetworkStatsLogger(directory + "scale-free.csv"));
         coordinator.simulate(50);
     }
@@ -40,14 +40,14 @@ public class BootstrapTest {
     @Test
     void grid() {
         Coordinator<Double> coordinator = new Coordinator<>(
-                new GridNetwork<>(10, 100, () -> new ConstAgent(0.)),
+                new GridNetwork<>(10, 100, id -> new ConstAgent(0.)),
                 new NetworkStatsLogger(directory + "grid.csv"));
         coordinator.simulate(50);
     }
 
     @Test
     void growing() {
-        Network<Double> network = new EmptyNetwork<>(() -> new ConstAgent(0.));
+        Network<Double> network = new EmptyNetwork<>(id -> new ConstAgent(0.));
         network.resize(1);
         Coordinator<Double> coordinator = new Coordinator<>(network,
                 new NetworkStatsLogger(directory + "growing.csv"));
