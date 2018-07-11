@@ -3,7 +3,7 @@ package it.unipi.di.p2pbc.newscast.simulation;
 import it.unipi.di.p2pbc.newscast.core.Correspondent;
 import org.graphstream.algorithm.ConnectedComponents;
 import org.graphstream.algorithm.Dijkstra;
-import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.graph.Graph;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -15,8 +15,15 @@ import static org.graphstream.algorithm.Toolkit.averageClusteringCoefficient;
 import static org.graphstream.algorithm.Toolkit.averageDegree;
 
 public class NetworkStatsLogger extends NewsLogger<Double> {
+    private boolean multigraph;
+
     public NetworkStatsLogger(String filePath) {
+        this(filePath, true);
+    }
+
+    public NetworkStatsLogger(String filePath, boolean multigraph) {
         super(filePath);
+        this.multigraph = multigraph;
 
         try (Writer writer = Files.newBufferedWriter(log.toPath(), CREATE, TRUNCATE_EXISTING)) {
             writer.write("Step,ClustCoeff,AvgInDegree,AvgOutDegree,ConnComponents,LargestConnComponent,AvgPathLength\n");
@@ -27,7 +34,7 @@ public class NetworkStatsLogger extends NewsLogger<Double> {
 
     @Override
     public void logNetworkState(Collection<Correspondent<Double>> network) {
-        SingleGraph graph = NetworkLogger.loadGraph(network, "");
+        Graph graph = NetworkLogger.loadGraph(network, "", multigraph);
         log("LOG: Computing average clustering coefficient... ");
         double clusteringCoefficient = averageClusteringCoefficient(graph);
         log("Done\n");
