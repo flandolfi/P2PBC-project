@@ -20,8 +20,9 @@ public class EmptyNetwork<T> implements Network<T> {
     }
 
     protected Correspondent<T> addPeer() {
-        Correspondent<T> peer = new Correspondent<>((nodeId++).toString(), agentFactory.createAgent());
+        Correspondent<T> peer = new Correspondent<>((nodeId).toString(), agentFactory.createAgent(nodeId));
         network.add(peer);
+        nodeId++;
 
         return peer;
     }
