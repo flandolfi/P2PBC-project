@@ -14,13 +14,34 @@ import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 import static org.graphstream.algorithm.Toolkit.averageClusteringCoefficient;
 import static org.graphstream.algorithm.Toolkit.averageDegree;
 
-public class NetworkStatsLogger extends NewsLogger<Double> {
+/**
+ * This {@link Logger} subclass provides functionalities to analyze and store
+ * measurements regarding the network's graph representation.
+ *
+ * @param <T> the news data type
+ */
+public class NetworkStatsLogger<T> extends NewsLogger<T> {
     private boolean multigraph;
 
+    /**
+     * Creates a {@link NetworkStatsLogger} object. All the analysis will be
+     * performed on the multigraph representations of the networks.
+     *
+     * @param filePath the path where the log file will be created (overwritten
+     *                 if already exists)
+     */
     public NetworkStatsLogger(String filePath) {
         this(filePath, true);
     }
 
+    /**
+     * Creates a {@link NetworkStatsLogger} object.
+     *
+     * @param filePath the path where the log file will be created (overwritten
+     *                 if already exists)
+     * @param multigraph if {@code true}, all the analysis will be performed on
+     *                   the multigraph representations of the networks
+     */
     public NetworkStatsLogger(String filePath, boolean multigraph) {
         super(filePath);
         this.multigraph = multigraph;
@@ -32,8 +53,14 @@ public class NetworkStatsLogger extends NewsLogger<Double> {
         }
     }
 
+    /**
+     * Logs various metrics evaluated on the graph representation of the network
+     * on a CSV file.
+     *
+     * @param network the network to be analyzed
+     */
     @Override
-    public void logNetworkState(Collection<Correspondent<Double>> network) {
+    public void logNetworkState(Collection<Correspondent<T>> network) {
         Graph graph = NetworkLogger.loadGraph(network, "", multigraph);
         log("LOG: Computing average clustering coefficient... ");
         double clusteringCoefficient = averageClusteringCoefficient(graph);
@@ -42,7 +69,7 @@ public class NetworkStatsLogger extends NewsLogger<Double> {
 
         double avgOutDegree = 0.;
 
-        for (Correspondent<Double> n : network) {
+        for (Correspondent<T> n : network) {
             avgOutDegree += n.getPeers().size();
         }
 

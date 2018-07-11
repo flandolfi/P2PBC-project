@@ -4,12 +4,23 @@ import it.unipi.di.p2pbc.newscast.core.Correspondent;
 
 import java.util.*;
 
+/**
+ * Class representing an empty network.
+ *
+ * @param <T> the news data type
+ */
 public class EmptyNetwork<T> implements Network<T> {
     protected ArrayList<Correspondent<T>> network = new ArrayList<>();
     protected SplittableRandom random = new SplittableRandom();
     protected AgentFactory<T> agentFactory;
     protected Integer nodeId = 0;
 
+    /**
+     * Creates an empty network. Every added node will have an agent provided by
+     * the given {@link AgentFactory}.
+     *
+     * @param agentFactory the custom {@link AgentFactory}
+     */
     public EmptyNetwork(AgentFactory<T> agentFactory) {
         this.agentFactory = agentFactory;
     }
@@ -27,16 +38,34 @@ public class EmptyNetwork<T> implements Network<T> {
         return peer;
     }
 
+    /**
+     * Returns the {@link Correspondent}s in the network.
+     *
+     * @return a {@link List} of {@link Correspondent}s
+     */
     @Override
     public List<Correspondent<T>> getNodes() {
         return network;
     }
 
+    /**
+     * Returns the current size of the network.
+     *
+     * @return the current size of the network
+     */
     @Override
     public int size() {
         return network.size();
     }
 
+    /**
+     * Resizes the network to a given size. If the new size is smaller than the
+     * actual size, randomly removes nodes from the network. Otherwise, link new
+     * nodes to the network performing an update to a random node in the
+     * network.
+     *
+     * @param size the new size of the network
+     */
     @Override
     public void resize(int size) {
         int delta = size - network.size();
