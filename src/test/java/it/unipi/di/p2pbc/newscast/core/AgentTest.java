@@ -40,7 +40,7 @@ class AgentTest {
         }
 
         max = Math.max(max, value);
-        avg = 0.5*(avg + value);
+        avg = 0.5 * (avg + value);
         maxAgent.updateNews(news);
         avgAgent.updateNews(news);
         cstAgent.updateNews(news);

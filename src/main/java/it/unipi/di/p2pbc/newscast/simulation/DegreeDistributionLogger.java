@@ -14,32 +14,30 @@ import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 import static org.graphstream.algorithm.Toolkit.degreeDistribution;
 
 /**
- * {@link Logger} subclass used to log the degree distribution of
- * {@link Network}s.
+ * {@link Logger} subclass used to log the degree distribution of {@link Network}s.
  */
 public class DegreeDistributionLogger extends NewsLogger<Double> {
     private boolean multigraph;
 
     /**
-     * Creates a {@link Logger} subclass which will log down the (multigraph)
-     * degree distribution at each step of the protocol.
+     * Creates a {@link Logger} subclass which will log down the (multigraph) degree distribution at
+     * each step of the protocol.
      *
-     * @param filePath the path on which the log file will be create
-     *                 (overwritten if already present)
+     * @param filePath the path on which the log file will be create (overwritten if already
+     *                 present)
      */
     public DegreeDistributionLogger(String filePath) {
         this(filePath, true);
     }
 
     /**
-     * Creates a {@link Logger} subclass which will log down the degree
-     * distribution at each step of the protocol.
+     * Creates a {@link Logger} subclass which will log down the degree distribution at each step of
+     * the protocol.
      *
-     * @param filePath the path on which the log file will be create
-     *                 (overwritten if already present)
-     * @param multigraph if {@code true}, treats the {@link Network} as a
-     *                   multigraph (i.e., allow multiple edges between two
-     *                   nodes).
+     * @param filePath   the path on which the log file will be create (overwritten if already
+     *                   present)
+     * @param multigraph if {@code true}, treats the {@link Network} as a multigraph (i.e., allow
+     *                   multiple edges between two nodes).
      */
     public DegreeDistributionLogger(String filePath, boolean multigraph) {
         super(filePath);

@@ -3,14 +3,14 @@ package it.unipi.di.p2pbc.newscast.core;
 import java.util.List;
 
 /**
- * This class represent an {@link Agent} application that ignores all updates
- * and maintains the stored news constant.
+ * This class represent an {@link Agent} application that ignores all updates and maintains the
+ * stored news constant.
  */
 public class ConstAgent implements Agent<Double> {
     private Double value;
 
     /**
-     * Constructs and initialize an {@link ConstAgent} instance.
+     * Constructs and initialize a {@link ConstAgent} instance.
      *
      * @param value the (constant) value of the news
      */
@@ -34,5 +34,6 @@ public class ConstAgent implements Agent<Double> {
      * @param news a {@link List} of {@link Double}
      */
     @Override
-    public void updateNews(List<Double> news) {}
+    public void updateNews(List<Double> news) {
+    }
 }

@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 /**
  * The cache stored by a {@link Correspondent}.
  *
- * @param <T> the type of values stored by the cache. It should coincide by the
- *            type of values used by the {@link Agent}
+ * @param <T> the type of values stored by the cache. It should coincide by the type of values used
+ *            by the {@link Agent}
  */
 public class Cache<T> {
 
@@ -24,14 +24,13 @@ public class Cache<T> {
             this.timestamp = Instant.now();
         }
 
-        // CompareTo() & equals() method used by the TreeSet for maintaining the
-        // cache entries sorted by timestamp. Two entries are equal if and only
-        // if the Correspondent is the same (it is required that there are no
-        // more than 1 entry for a given peer). Ties on the timestamps are
-        // broken arbitrarily.
+        // CompareTo() & equals() method used by the TreeSet for maintaining the cache entries
+        // sorted by timestamp. Two entries are equal if and only if the Correspondent is the same
+        // (it is required that there are no more than 1 entry for a given peer). Ties on the
+        // timestamps are broken arbitrarily.
         @Override
         public int compareTo(CacheEntry o) {
-            return peer.equals(o.peer)? 0 : timestamp.equals(o.timestamp)?
+            return peer.equals(o.peer) ? 0 : timestamp.equals(o.timestamp) ?
                     peer.getId().compareTo(o.peer.getId()) : timestamp.compareTo(o.timestamp);
         }
 
@@ -68,8 +67,8 @@ public class Cache<T> {
     }
 
     /**
-     * Adds a new entry to the cache. The generated entry will have a timestamp
-     * set to {@link Instant#now()}.
+     * Adds a new entry to the cache. The generated entry will have a timestamp set to {@link
+     * Instant#now()}.
      *
      * @param peer the {@link Correspondent} that provided the news
      * @param data the news information
@@ -110,8 +109,8 @@ public class Cache<T> {
     }
 
     /**
-     * Merges the current cache with a given one, adding all of its elements and
-     * then removing the oldest ones.
+     * Merges the current cache with a given one, adding all of its elements and then removing the
+     * oldest ones.
      *
      * @param cache a {@link Cache} object
      */
@@ -123,8 +122,7 @@ public class Cache<T> {
     }
 
     /**
-     * Returns the {@link Set} of {@link Correspondent}s present in the cache
-     * entries.
+     * Returns the {@link Set} of {@link Correspondent}s present in the cache entries.
      *
      * @return a {@link Set} of {@link Correspondent}s
      */
@@ -133,8 +131,8 @@ public class Cache<T> {
     }
 
     /**
-     * Returns the {@link List} of news present in the cache entries, sorted by
-     * timestamps (from the oldest to the newest).
+     * Returns the {@link List} of news present in the cache entries, sorted by timestamps (from the
+     * oldest to the newest).
      *
      * @return a {@link List} of news of {@link T} type
      */

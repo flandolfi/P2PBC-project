@@ -12,10 +12,10 @@ class CoordinatorTest {
         Cache.setSize(20);
         int rows = 10;
         int cols = 30;
-        Coordinator<Double> coordinator = new Coordinator<>(new GridNetwork<>(rows, cols, id -> new AvgAgent(id > 0? 0. : 1.)),
+        Coordinator<Double> coordinator = new Coordinator<>(new GridNetwork<>(rows, cols, id -> new AvgAgent(id > 0 ? 0. : 1.)),
                 new NewsLogger<>(directory + "news.csv"),
                 new NetworkStatsLogger(directory + "network-stats.csv"),
-                new NewsStatsLogger(directory + "news-stats.csv", 1./(rows*cols)));
+                new NewsStatsLogger(directory + "news-stats.csv", 1. / (rows * cols)));
         coordinator.simulate(10);
     }
 }

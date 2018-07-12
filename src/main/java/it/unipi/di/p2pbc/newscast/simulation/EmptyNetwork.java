@@ -2,7 +2,10 @@ package it.unipi.di.p2pbc.newscast.simulation;
 
 import it.unipi.di.p2pbc.newscast.core.Correspondent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.SplittableRandom;
 
 /**
  * Class representing an empty network.
@@ -16,8 +19,8 @@ public class EmptyNetwork<T> implements Network<T> {
     protected Integer nodeId = 0;
 
     /**
-     * Creates an empty network. Every added node will have an agent provided by
-     * the given {@link AgentFactory}.
+     * Creates an empty network. Every added node will have an agent provided by the given {@link
+     * AgentFactory}.
      *
      * @param agentFactory the custom {@link AgentFactory}
      */
@@ -31,7 +34,8 @@ public class EmptyNetwork<T> implements Network<T> {
     }
 
     protected Correspondent<T> addPeer() {
-        Correspondent<T> peer = new Correspondent<>((nodeId).toString(), agentFactory.createAgent(nodeId));
+        Correspondent<T> peer = new Correspondent<>((nodeId).toString(),
+                agentFactory.createAgent(nodeId));
         network.add(peer);
         nodeId++;
 
@@ -59,10 +63,9 @@ public class EmptyNetwork<T> implements Network<T> {
     }
 
     /**
-     * Resizes the network to a given size. If the new size is smaller than the
-     * actual size, randomly removes nodes from the network. Otherwise, link new
-     * nodes to the network performing an update to a random node in the
-     * network.
+     * Resizes the network to a given size. If the new size is smaller than the actual size,
+     * randomly removes nodes from the network. Otherwise, link new nodes to the network performing
+     * an update to a random node in the network.
      *
      * @param size the new size of the network
      */

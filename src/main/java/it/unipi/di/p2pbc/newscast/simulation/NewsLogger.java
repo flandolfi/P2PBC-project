@@ -10,13 +10,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import static java.nio.file.StandardOpenOption.APPEND;
-import static java.nio.file.StandardOpenOption.CREATE;
-import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
+import static java.nio.file.StandardOpenOption.*;
 
 /**
- * This {@link Logger} subclass stores each {@link Correspondent}'s
- * {@link it.unipi.di.p2pbc.newscast.core.Agent}'s news to a CSV file.
+ * This {@link Logger} subclass stores each {@link Correspondent}'s {@link
+ * it.unipi.di.p2pbc.newscast.core.Agent}'s news to a CSV file.
  *
  * @param <T> the news data type
  */
@@ -27,8 +25,8 @@ public class NewsLogger<T> extends Logger<T> {
     /**
      * Creates a {@link NewsLogger} object.
      *
-     * @param filePath the file where the news will be logged (it will be
-     *                 created or overwritten if already existent)
+     * @param filePath the file where the news will be logged (it will be created or overwritten if
+     *                 already existent)
      */
     public NewsLogger(String filePath) {
         log = new File(filePath);
@@ -51,8 +49,8 @@ public class NewsLogger<T> extends Logger<T> {
     }
 
     /**
-     * Sets the current cycle to be logged as index. Every successive call will
-     * have this value incremented by one.
+     * Sets the current cycle to be logged as index. Every successive call will have this value
+     * incremented by one.
      *
      * @param step the current step to be displayed
      */

@@ -2,11 +2,9 @@ package it.unipi.di.p2pbc.newscast.simulation;
 
 import it.unipi.di.p2pbc.newscast.core.Cache;
 import it.unipi.di.p2pbc.newscast.core.ConstAgent;
-import org.junit.jupiter.api.Test;
 
 public class DegreeDistributionTest {
-    @Test
-    public void randomNetworks() {
+    public static void randomNetworks() {
         String path = "./data/degree-distributions/random.csv";
         DegreeDistributionLogger logger = new DegreeDistributionLogger(path, false);
 
@@ -18,8 +16,7 @@ public class DegreeDistributionTest {
         }
     }
 
-    @Test
-    public void scaleFreeNetworks() {
+    public static void scaleFreeNetworks() {
         String path = "./data/degree-distributions/scale-free.csv";
         DegreeDistributionLogger logger = new DegreeDistributionLogger(path, false);
 
@@ -29,5 +26,10 @@ public class DegreeDistributionTest {
             logger.setCurrentStep(c);
             logger.logNetworkState(network.getNodes());
         }
+    }
+
+    public static void main(String[] args) {
+        randomNetworks();
+        scaleFreeNetworks();
     }
 }

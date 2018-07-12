@@ -6,8 +6,8 @@ import java.util.Set;
 import java.util.SplittableRandom;
 
 /**
- * This class represents a peer in the network, constantly exchanging news with
- * an {@link Agent} instance.
+ * This class represents a peer in the network, constantly exchanging news with an {@link Agent}
+ * instance.
  *
  * @param <T> the data type of the news used by the {@link Agent}
  */
@@ -20,11 +20,10 @@ public class Correspondent<T> {
     private static boolean countPassiveUpdates = false;
 
     /**
-     * Sets the timer update criterion. If {@code countPassiveUpdates} is
-     * {@code true}, the internal timer of each {@link Correspondent} is started
-     * whenever it updates its {@link Agent}'s news (the update might be active
-     * or passive). If {@code false} (default value), the internal timer of each
-     * {@link Correspondent} is started only on active updates.
+     * Sets the timer update criterion. If {@code countPassiveUpdates} is {@code true}, the internal
+     * timer of each {@link Correspondent} is started whenever it updates its {@link Agent}'s news
+     * (the update might be active or passive). If {@code false} (default value), the internal timer
+     * of each {@link Correspondent} is started only on active updates.
      *
      * @param countPassiveUpdates the new timer update criteirion
      */
@@ -35,18 +34,17 @@ public class Correspondent<T> {
     /**
      * Returns the current timer update criterion.
      *
-     * @see Correspondent#setPassiveUpdates
      * @return the current timer update criterion
+     * @see Correspondent#setPassiveUpdates
      */
     public static boolean passiveUpdates() {
         return countPassiveUpdates;
     }
 
     /**
-     * Creates a {@link Correspondent} with identifier {@code id} and
-     * {@link Agent} agent.
+     * Creates a {@link Correspondent} with identifier {@code id} and {@link Agent} agent.
      *
-     * @param id the {@link Correspondent} identifier
+     * @param id    the {@link Correspondent} identifier
      * @param agent the {@link Agent} with which it will exchange news
      */
     public Correspondent(String id, Agent<T> agent) {
@@ -102,8 +100,7 @@ public class Correspondent<T> {
     }
 
     /**
-     * Returns the {@link Instant} in which the {@link Correspondent} last
-     * updated the news
+     * Returns the {@link Instant} in which the {@link Correspondent} last updated the news.
      *
      * @return the last update {@link Instant}
      */
@@ -112,8 +109,8 @@ public class Correspondent<T> {
     }
 
     /**
-     * Updates the {@link Cache} and the {@link Agent}'s news exchangeing them
-     * with the passed {@link Correspondent}.
+     * Updates the {@link Cache} and the {@link Agent}'s news exchangeing them with the passed
+     * {@link Correspondent}.
      *
      * @param peer the {@link Correspondent} with which it will exchange news
      */
@@ -130,8 +127,8 @@ public class Correspondent<T> {
     }
 
     /**
-     * Returns the known {@link Correspondent}s present in {@link Cache},
-     * excluded the {@link Correspondent} itself.
+     * Returns the known {@link Correspondent}s present in {@link Cache}, excluded the {@link
+     * Correspondent} itself.
      *
      * @return a {@link Set} of {@link Correspondent}
      */
@@ -145,8 +142,8 @@ public class Correspondent<T> {
     /**
      * Selects a random peer from the known {@link Correspondent}s.
      *
-     * @see Correspondent#getPeers()
      * @return a {@link Correspondent}
+     * @see Correspondent#getPeers()
      */
     public Correspondent<T> selectPeer() {
         ArrayList<Correspondent<T>> peers = new ArrayList<>(getPeers());
@@ -158,13 +155,12 @@ public class Correspondent<T> {
     }
 
     /**
-     * Compares the specified object with this {@link Correspondent}. It returns
-     * true only if the object is a {@link Correspondent} instance and thay have
-     * the same {@code id}.
+     * Compares the specified object with this {@link Correspondent}. It returns {@code true} only
+     * if the object is a {@link Correspondent} instance and that have the same {@code id}.
      *
      * @param obj the object to compare
-     * @return true if {@code obj} is a {@link Correspondent} and
-     *      {@code this.getId() == obj.getId()}
+     * @return {@code true} if {@code obj} is a {@link Correspondent} and {@code this.getId() ==
+     * obj.getId()}
      */
     @Override
     public boolean equals(Object obj) {

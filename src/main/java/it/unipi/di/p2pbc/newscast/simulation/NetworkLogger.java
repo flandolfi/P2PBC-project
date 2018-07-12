@@ -17,8 +17,8 @@ import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 
 /**
- * This {@link Logger} subclass provides functionalities to store the graph
- * representation of the network as a GraphML file.
+ * This {@link Logger} subclass provides functionalities to store the graph representation of the
+ * network as a GraphML file.
  *
  * @param <T> news data type
  */
@@ -28,11 +28,9 @@ public class NetworkLogger<T> extends Logger<T> {
     protected int id = 0;
 
     /**
-     * Creates a {@link NetworkLogger} that will store multigraph
-     * representations of the network.
+     * Creates a {@link NetworkLogger} that will store multigraph representations of the network.
      *
-     * @param directory the path of a directory where the GraphML files will be
-     *                  stored
+     * @param directory the path of a directory where the GraphML files will be stored
      */
     public NetworkLogger(String directory) {
         this(directory, true);
@@ -40,14 +38,11 @@ public class NetworkLogger<T> extends Logger<T> {
 
 
     /**
-     * Creates a {@link NetworkLogger} that will store graph representations of
-     * the network.
+     * Creates a {@link NetworkLogger} that will store graph representations of the network.
      *
-     * @param multigraph if {@code true}, the graph will be stored as a
-     *                   multigraph (i.e., it will allow multiple edges between
-     *                   nodes)
-     * @param directory the path of a directory where the GraphML files will be
-     *                  stored
+     * @param multigraph if {@code true}, the graph will be stored as a multigraph (i.e., it will
+     *                   allow multiple edges between nodes)
+     * @param directory  the path of a directory where the GraphML files will be stored
      */
     public NetworkLogger(String directory, boolean multigraph) {
         root = new File(directory);
@@ -58,14 +53,16 @@ public class NetworkLogger<T> extends Logger<T> {
     /**
      * Stores a given {@link Graph} in a directory.
      *
-     * @param graph the {@link Graph} to be stored
+     * @param graph     the {@link Graph} to be stored
      * @param directory the path of the directory
      */
     public static void storeGraph(Graph graph, File directory) {
         log("LOG: Writing graph to GraphML file... ");
         FileSinkGraphML sink = new FileSinkGraphML();
 
-        try (Writer writer = Files.newBufferedWriter(Paths.get(directory.getPath() + "/" + graph.getId() + ".xml"), CREATE, TRUNCATE_EXISTING)) {
+        try (Writer writer = Files.newBufferedWriter(
+                Paths.get(directory.getPath() + "/" + graph.getId() + ".xml"),
+                CREATE, TRUNCATE_EXISTING)) {
             sink.writeAll(graph, writer);
         } catch (IOException e) {
             System.err.println("\nError: " + e.getMessage());
@@ -78,29 +75,28 @@ public class NetworkLogger<T> extends Logger<T> {
      * Loads and converts a {@link Network} into a {@link MultiGraph}.
      *
      * @param network the {@link Network} to be converted
-     * @param id the identifier of the {@link Graph}
-     * @param <S> the type of the news data
-     * @return returns a {@link Graph} object (safely castable to
-     *         {@link MultiGraph})
+     * @param id      the identifier of the {@link Graph}
+     * @param <S>     the type of the news data
+     * @return returns a {@link Graph} object (safely castable to {@link MultiGraph})
      */
     public static <S> Graph loadGraph(Collection<Correspondent<S>> network, String id) {
         return loadGraph(network, id, true);
     }
 
     /**
-     * Loads and converts a {@link Network} into a {@link SingleGraph} or a
-     * {@link MultiGraph}, dependently on the value of {@code multigraph}.
+     * Loads and converts a {@link Network} into a {@link SingleGraph} or a {@link MultiGraph},
+     * dependently on the value of {@code multigraph}.
      *
-     * @param network the {@link Network} to be converted
-     * @param id the identifier of the {@link Graph}
-     * @param multigraph if {@code true}, loads the {@link Network} as a
-     *                   {@link MultiGraph}, otherwise as a {@link SingleGraph}
-     * @param <S> the type of the news data
-     * @return returns a {@link Graph} object (safely castable to
-     *         {@link MultiGraph})
+     * @param network    the {@link Network} to be converted
+     * @param id         the identifier of the {@link Graph}
+     * @param multigraph if {@code true}, loads the {@link Network} as a {@link MultiGraph},
+     *                   otherwise as a {@link SingleGraph}
+     * @param <S>        the type of the news data
+     * @return returns a {@link Graph} object (safely castable to {@link MultiGraph})
      */
-    public static <S> Graph loadGraph(Collection<Correspondent<S>> network, String id, boolean multigraph) {
-        Graph graph = multigraph? new MultiGraph(id, false, true)
+    public static <S> Graph loadGraph(Collection<Correspondent<S>> network, String id,
+                                      boolean multigraph) {
+        Graph graph = multigraph ? new MultiGraph(id, false, true)
                 : new SingleGraph(id, false, true);
         Integer nodeId = 0, edgeId = 0;
 

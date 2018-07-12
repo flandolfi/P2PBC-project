@@ -6,8 +6,8 @@ import java.io.PrintStream;
 import java.util.Collection;
 
 /**
- * This abstract class provides the skeleton for a logger, used both for
- * {@link Coordinator} objects and standalone.
+ * This abstract class provides the skeleton for a logger, that can be used both for {@link
+ * Coordinator} objects and as standalone.
  *
  * @param <T> the type of news data
  */
@@ -23,8 +23,8 @@ public abstract class Logger<T> {
     public abstract void logNetworkState(Collection<Correspondent<T>> network);
 
     /**
-     * Sets the verbosity of the logger. If {@code verbose} is {@code false},
-     * mute all the log output.
+     * Sets the verbosity of the logger. If {@code verbose} is {@code false}, mutes all the log
+     * output.
      *
      * @param verbose the verbosity of the logger
      */
@@ -33,11 +33,10 @@ public abstract class Logger<T> {
     }
 
     /**
-     * Sets the {@link PrintStream} where the output of the logger should be
-     * printed. The default value is {@link System#err}.
+     * Sets the {@link PrintStream} where the output of the logger should be printed. The default
+     * value is {@link System#err}.
      *
-     * @param out the {@link PrintStream} where the output of the logger should
-     *            be printed
+     * @param out the {@link PrintStream} where the output of the logger should be printed
      */
     public static void setPrintStream(PrintStream out) {
         Logger.out = out;

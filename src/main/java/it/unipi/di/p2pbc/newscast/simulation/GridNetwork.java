@@ -10,12 +10,12 @@ import it.unipi.di.p2pbc.newscast.core.Correspondent;
 public class GridNetwork<T> extends EmptyNetwork<T> {
 
     /**
-     * Creates a 2-dimensional grid network. Every added node will have an agent
-     * provided by the given {@link AgentFactory}.
+     * Creates a 2-dimensional grid network. Every added node will have an agent provided by the
+     * given {@link AgentFactory}.
      *
      * @param agentFactory the custom {@link AgentFactory}
-     * @param rows the number of rows of the grid
-     * @param cols the number of columns of the grid
+     * @param rows         the number of rows of the grid
+     * @param cols         the number of columns of the grid
      */
     public GridNetwork(int rows, int cols, AgentFactory<T> agentFactory) {
         super(agentFactory);

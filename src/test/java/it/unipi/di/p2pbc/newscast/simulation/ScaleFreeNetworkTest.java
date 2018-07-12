@@ -2,11 +2,9 @@ package it.unipi.di.p2pbc.newscast.simulation;
 
 import it.unipi.di.p2pbc.newscast.core.Cache;
 import it.unipi.di.p2pbc.newscast.core.ConstAgent;
-import org.junit.jupiter.api.Test;
 
 public class ScaleFreeNetworkTest {
-    @Test
-    public void scaleFreeNetworks() {
+    public static void scaleFreeNetworks() {
         String path = "./data/scale-free-networks/";
         ConstAgent agent = new ConstAgent(0.);
 
@@ -24,8 +22,7 @@ public class ScaleFreeNetworkTest {
         }
     }
 
-    @Test
-    public void randomRemoval() {
+    public static void randomRemoval() {
         String path = "./data/random-removal/";
         ConstAgent agent = new ConstAgent(0.);
         int size = 10000;
@@ -38,10 +35,15 @@ public class ScaleFreeNetworkTest {
             coordinator.simulate(50);
 
             for (int p = 90; p <= 100; p++) {
-                network.resize((int) (size*(100 - p)/100.));
+                network.resize((int) (size * (100 - p) / 100.));
                 logger.setCurrentStep(p);
                 logger.logNetworkState(network.getNodes());
             }
         }
+    }
+
+    public static void main(String[] args) {
+        randomRemoval();
+        scaleFreeNetworks();
     }
 }
