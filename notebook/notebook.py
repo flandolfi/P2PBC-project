@@ -9,7 +9,7 @@ import os
 
 # %% MPL SETTINGS
 mpl.rcdefaults()
-# sns.set(font_scale=1.5)
+# sns.set(font_scale=0.8)
 sns.set_style("white")
 # sns.set_palette("deep")
 # sns.set_palette(['w', 'gray'])
@@ -19,6 +19,7 @@ mpl.rcParams['font.family'] = [u'serif']
 mpl.rcParams['font.serif'] = [u'Computer Modern']
 mpl.rcParams['lines.linewidth'] = 1
 mpl.rcParams['axes.linewidth'] = 1
+mpl.rcParams['figure.figsize'] = (4, 3)
 
 # %% FIGURES DIRECTORY
 outdir = "./report/figures/"
@@ -35,10 +36,14 @@ bs_random = pd.read_csv("./data/bootstrap/random.csv", index_col="Step")
 
 # %%
 bs_growing["AvgPathLength"].loc[0] = 0.
-bs_growing.head()
+bs_grid["Degree"] = bs_grid["AvgInDegree"] + bs_grid["AvgOutDegree"]
+bs_lattice["Degree"] = bs_lattice["AvgInDegree"] + bs_lattice["AvgOutDegree"]
+bs_growing["Degree"] = bs_growing["AvgInDegree"] + bs_growing["AvgOutDegree"]
+bs_scalefree["Degree"] = bs_scalefree["AvgInDegree"] + bs_scalefree["AvgOutDegree"]
+bs_random["Degree"] = bs_random["AvgInDegree"] + bs_random["AvgOutDegree"]
 
 # %%
-fig, axes = plt.subplots(1, 2, figsize=(8, 3))
+fig, axes = plt.subplots(3, 1, sharex=True, figsize=(4, 5.5))
 bs_grid.plot(y="AvgPathLength", label="Grid", ax=axes[0])
 bs_lattice.plot(y="AvgPathLength", label="Lattice", ax=axes[0])
 bs_growing.plot(y="AvgPathLength", label="Growing", ax=axes[0])
@@ -49,44 +54,28 @@ bs_lattice.plot(y="ClustCoeff", label="Lattice", ax=axes[1])
 bs_growing.plot(y="ClustCoeff", label="Growing", ax=axes[1])
 bs_scalefree.plot(y="ClustCoeff", label="Scale-Free", ax=axes[1])
 bs_random.plot(y="ClustCoeff", label="Random", ax=axes[1])
+bs_grid.plot(y="Degree", label="Grid", ax=axes[2])
+bs_lattice.plot(y="Degree", label="Lattice", ax=axes[2])
+bs_growing.plot(y="Degree", label="Growing", ax=axes[2])
+bs_scalefree.plot(y="Degree", label="Scale-Free", ax=axes[2])
+bs_random.plot(y="Degree", label="Random", ax=axes[2])
 axes[0].set_ylabel("Average Path Length")
 axes[1].set_ylabel("Clustering Coefficient")
-axes[0].set_xlabel("Cycle")
-axes[1].set_xlabel("Cycle")
+axes[2].set_ylabel("Degree")
+axes[2].set_xlabel("Cycle")
 axes[0].set_ylim((0, 10))
-axes[1].set_ylim((0.2, 0.7))
-axes[0].set_xlim((0, 30))
-axes[1].set_xlim((0, 30))
-axes[0].legend().set_visible(False)
+axes[1].set_ylim((0.2, 0.85))
+axes[2].set_ylim(0, 45)
+axes[2].set_xlim((0, 30))
+axes[0].legend(loc='center left', bbox_to_anchor=(1, 0.5))
 axes[1].legend(loc='center left', bbox_to_anchor=(1, 0.5))
+axes[2].legend(loc='center left', bbox_to_anchor=(1, 0.5))
 axes[0].axvline(20, color="gray", linestyle='--', linewidth=1.)
 axes[1].axvline(20, color="gray", linestyle='--', linewidth=1.)
+axes[2].axvline(20, color="gray", linestyle='--', linewidth=1.)
+# axes[2].axhline(19, c="gray", linestyle=":")
 fig.tight_layout()
 plt.savefig("report/figures/bootstrap.pdf", bbox_inches='tight')
-plt.show()
-
-# %%
-bs_grid["Degree"] = bs_grid["AvgInDegree"] + bs_grid["AvgOutDegree"]
-bs_lattice["Degree"] = bs_lattice["AvgInDegree"] + bs_lattice["AvgOutDegree"]
-bs_growing["Degree"] = bs_growing["AvgInDegree"] + bs_growing["AvgOutDegree"]
-bs_scalefree["Degree"] = bs_scalefree["AvgInDegree"] + bs_scalefree["AvgOutDegree"]
-bs_random["Degree"] = bs_random["AvgInDegree"] + bs_random["AvgOutDegree"]
-
-# %%
-fig, ax = plt.subplots(figsize=(4, 3))
-bs_grid.plot(y="Degree", label="Grid", ax=ax)
-bs_lattice.plot(y="Degree", label="Lattice", ax=ax)
-bs_growing.plot(y="Degree", label="Growing", ax=ax)
-bs_scalefree.plot(y="Degree", label="Scale-Free", ax=ax)
-bs_random.plot(y="Degree", label="Random", ax=ax)
-ax.axhline(19, c="gray", linestyle="--", label="Max. Outdegree $(c-1)$")
-ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-ax.set_ylabel("Degree")
-ax.set_xlabel("Cycle")
-ax.set_ylim(15, 40)
-ax.set_xlim(0, 25)
-fig.tight_layout()
-plt.savefig("report/figures/bootstrap-degrees.pdf", bbox_inches='tight')
 plt.show()
 
 
@@ -96,7 +85,7 @@ sf_c40 = pd.read_csv("./data/scale-free-networks/cache-40.csv")
 sf_c80 = pd.read_csv("./data/scale-free-networks/cache-80.csv")
 
 # %%
-fig, axes = plt.subplots(1, 2, figsize=(8, 3))
+fig, axes = plt.subplots(2, 1, sharex=True, figsize=(4, 4.4))
 sf_c20.plot(x='Step', y='AvgPathLength', label="$c = 20$", ax=axes[0])
 sf_c40.plot(x='Step', y='AvgPathLength', label="$c = 40$", ax=axes[0])
 sf_c80.plot(x='Step', y='AvgPathLength', label="$c = 80$", ax=axes[0])
@@ -105,11 +94,9 @@ sf_c40.plot(x='Step', y='ClustCoeff', label="$c = 40$", ax=axes[1])
 sf_c80.plot(x='Step', y='ClustCoeff', label="$c = 80$", ax=axes[1])
 axes[0].set_ylabel("Average Path Length")
 axes[1].set_ylabel("Clustering Coefficient")
-axes[0].set_xlabel("Nodes")
 axes[1].set_xlabel("Nodes")
-axes[0].legend().set_visible(False)
+axes[0].legend(loc='center left', bbox_to_anchor=(1, 0.5))
 axes[1].legend(loc='center left', bbox_to_anchor=(1, 0.5))
-axes[0].set_xscale('log', basex=2)
 axes[1].set_xscale('log', basex=2)
 fig.tight_layout()
 plt.savefig("report/figures/scale-free-networks.pdf", bbox_inches='tight')
@@ -121,7 +108,7 @@ rr_c40 = pd.read_csv("./data/random-removal/cache-40.csv")
 rr_c80 = pd.read_csv("./data/random-removal/cache-80.csv")
 
 # %%
-fig, ax = plt.subplots(figsize=(4, 3))
+fig, ax = plt.subplots()
 ax.plot(range(90, 101), range(1000, -1, -100), c='gray', linestyle='--', label="All Nodes")
 rr_c20.plot(x='Step', y='LargestConnComponent', label="$c = 20$", ax=ax)
 rr_c40.plot(x='Step', y='LargestConnComponent', label="$c = 40$", ax=ax)
@@ -147,7 +134,7 @@ varred_c40 = (varred_c40[1:]/varred_c40[:-1])**2
 varred_c80 = (varred_c80[1:]/varred_c80[:-1])**2
 
 # %%
-fig, ax = plt.subplots(figsize=(4, 3))
+fig, ax = plt.subplots()
 ax.plot(varred_c20, label="$c = 20$")
 ax.plot(varred_c22, label="$c = 22$")
 ax.plot(varred_c25, label="$c = 25$")
@@ -187,7 +174,7 @@ max_c40 = max_c40[["Step", "HasCorrectValue"]].groupby(["Step"]).mean()
 max_c80 = max_c80[["Step", "HasCorrectValue"]].groupby(["Step"]).mean()
 
 # %%
-fig, ax = plt.subplots(figsize=(4, 3))
+fig, ax = plt.subplots()
 ax.plot(theoreticalModel(1024, 12), c="gray", linestyle="--", label="Theoretical")
 max_c20.plot(y="HasCorrectValue", label="$c = 20$", ax=ax)
 max_c40.plot(y="HasCorrectValue", label="$c = 40$", ax=ax)
@@ -211,7 +198,7 @@ for i in range(8, 15):
     networks[2**i]["HasCorrectValue"] *= 100.
 
 # %%
-fig, ax = plt.subplots(figsize=(4, 3))
+fig, ax = plt.subplots()
 
 for i in range(8, 15):
     networks[2**i].plot(y="HasCorrectValue", label="$N = 2^{" + str(i) + "}$", ax=ax)
@@ -232,7 +219,7 @@ for i in range(1, 5):
     cc[2**i] = cc[2**i].groupby(["Step"]).mean()
 
 # %%
-fig, ax = plt.subplots(figsize=(4, 3))
+fig, ax = plt.subplots()
 
 for i in range(1, 5):
     cc[2**i].plot(y="ConnComponents", label="$c = {}$".format(2**i), ax=ax)
@@ -240,7 +227,7 @@ for i in range(1, 5):
 ax.set_xlabel("Cycle")
 ax.set_ylabel("Connected Components");
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-ax.set_xlim(0, 16)
+ax.set_xlim(0, 14)
 fig.tight_layout()
 plt.savefig("report/figures/connected-components.pdf", bbox_inches='tight')
 plt.show()
@@ -271,112 +258,117 @@ with open("./data/degree-distributions/scale-free.csv") as file:
         dd_scalefree.append(unfold(np.fromstring(line, dtype=int, sep=',')[1:]))
 
 # %%
-fig, axes = plt.subplots(1, 2, figsize=(8, 3))
+fig, ax = plt.subplots()
 
 for cache, degrees in zip([10, 20, 30, 40], dd_random):
-    sns.kdeplot(degrees, label="$c = {}$".format(cache), ax=axes[0])
+    sns.kdeplot(degrees, label="$c = {}$".format(cache), ax=ax)
+
+
+ax.plot([stats.binom.pmf(i, 79, 0.5) for i in range(80)], c='gray', linestyle='--', label="Theoretical")
+ax.set_xlabel("Degree")
+ax.set_ylabel("PDF")
+ax.legend().set_visible(False)
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+fig.tight_layout()
+plt.savefig("report/figures/degrees-random.pdf", bbox_inches='tight')
+plt.show()
+
+# %%
+fig, ax = plt.subplots()
 
 for cache, degrees in zip([10, 20, 30, 40], dd_scalefree):
-    sns.kdeplot(degrees, label="$c = {}$".format(cache), ax=axes[1], bw=0.3)
+    sns.kdeplot(degrees, label="$c = {}$".format(cache), ax=ax, bw=0.3)
 
-axes[0].plot([stats.binom.pmf(i, 79, 0.5) for i in range(80)], c='gray', linestyle='--', label="Theoretical")
-axes[1].plot([np.inf] + [np.power(np.float(i), -3) for i in range(1, 80)], c='gray', linestyle='--', label="Theoretical")
-axes[0].set_xlabel("Degree")
-axes[1].set_xlabel("Degree")
-axes[0].set_ylabel("Density")
-axes[1].set_xlim(1, 80)
-axes[1].set_ylim(0.00005, 1)
-axes[1].set_xscale("log")
-axes[1].set_yscale("log")
-axes[0].legend().set_visible(False)
-axes[1].legend(loc='center left', bbox_to_anchor=(1, 0.5))
+ax.plot([np.inf] + [np.power(np.float(i), -3) for i in range(1, 80)], c='gray', linestyle='--', label="Theoretical")
+ax.set_xlabel("Degree")
+ax.set_ylabel("PDF")
+ax.set_xlim(1, 80)
+ax.set_ylim(0.00005, 1)
+ax.set_xscale("log")
+ax.set_yscale("log")
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 fig.tight_layout()
-plt.savefig("report/figures/degree-distributions.pdf", bbox_inches='tight')
+plt.savefig("report/figures/degrees-scale-free.pdf", bbox_inches='tight')
 plt.show()
 
 # %% HEATMAP
-cmap = sns.color_palette('Blues', 256, 0.75)[32:]
-
-# %% PI
 heat_pi = pd.read_csv("./data/heatmap/pi-estimation.csv", index_col=0, header=None)
-
-# %%
-radius = 100
-fig, axes = plt.subplots(1, 5, figsize=(8, 2.3), gridspec_kw={"width_ratios": [2, 2, 2, 2, 0.1]})
-
-for i, step in enumerate(range(0, 31, 10)):
-    sns.heatmap(heat_pi.as_matrix()[step, :].reshape((radius, radius)),
-                vmin=0, vmax=1,
-                xticklabels=False,
-                yticklabels=False,
-                linewidths=0,
-                cmap=cmap,
-                ax=axes[i],
-                cbar_ax=axes[4],
-                cbar=(i == 3),
-                cbar_kws={"ticks": [0, 0.25*np.pi, 1]})
-    axes[i].set_xlabel("Cycle {}".format(step))
-
-axes[4].set_yticklabels(["$0$", """$\pi/4$""", "$1$"])
-fig.tight_layout()
-plt.savefig("report/figures/heatmap-pi.pdf", bbox_inches='tight')
-plt.show()
-
-# %% NETWORK SIZE
 heat_size = pd.read_csv("./data/heatmap/size-estimation.csv", index_col=0, header=None)
-
-# %%
-rows = 100
-cols = 100
-fig, axes = plt.subplots(1, 5, figsize=(8, 2.3), gridspec_kw={"width_ratios": [2, 2, 2, 2, 0.1]})
-
-for i, step in enumerate(range(0, 31, 10)):
-    sns.heatmap(heat_size.as_matrix()[step, :].reshape((rows, cols)),
-                vmin=0, vmax=2e-4,
-                xticklabels=False,
-                yticklabels=False,
-                linewidths=0,
-                cmap=cmap,
-                ax=axes[i],
-                cbar_ax=axes[4],
-                cbar=(i == 3),
-                cbar_kws={"extend": "max", "ticks": [0, 0.5e-4, 1e-4, 1.5e-4, 2e-4]})
-    axes[i].set_xlabel("Cycle {}".format(step))
-
-axes[4].set_yticklabels([
-    "$0$",
-    """$0.5 \cdot 10^{-4}$""",
-    """$1.0 \cdot 10^{-4}$""",
-    """$1.5 \cdot 10^{-4}$""",
-    """$2.0 \cdot 10^{-4}$"""
-])
-fig.tight_layout()
-plt.savefig("report/figures/heatmap-size.pdf", bbox_inches='tight')
-plt.show()
-
-# %% EPIDEMIC
 heat_epidemic = pd.read_csv("./data/heatmap/epidemic.csv", index_col=0, header=None)
 
 # %%
+cmap = mpl.colors.ListedColormap(sns.color_palette('Blues', 256, 0.7))
+fig, axes = plt.subplots(3, 5,
+                         figsize=(5, 3.5),
+                         gridspec_kw={
+                            "width_ratios": [2, 2, 2, 2, 0.1],
+                            "height_ratios": [1, 1, 1]
+                        })
+
+# %%
 rows = 100
 cols = 100
-fig, axes = plt.subplots(1, 5, figsize=(8, 2.3), gridspec_kw={"width_ratios": [2, 2, 2, 2, 0.1]})
 
-for i, step in enumerate([0, 10, 15, 20]):
-    sns.heatmap(heat_epidemic.as_matrix()[step, :].reshape((rows, cols)),
-                vmin=0, vmax=1,
-                xticklabels=False,
-                yticklabels=False,
-                linewidths=0,
-                cmap=cmap,
-                ax=axes[i],
-                cbar_ax=axes[4],
-                cbar=(i == 3),
-                cbar_kws={"ticks": [0, 1]})
-    axes[i].set_xlabel("Cycle {}".format(step))
+for i, step in enumerate(range(0, 31, 10)):
+    img = axes[0, i].imshow(heat_size.as_matrix()[step, :].reshape((rows, cols)),
+                            vmin=0,
+                            vmax=2e-4,
+                            cmap=cmap,
+                            aspect='auto',
+                            interpolation='none')
+    axes[0, i].get_xaxis().set_ticks([])
+    axes[0, i].get_yaxis().set_ticks([])
 
+
+fig.colorbar(img, cax=axes[0, 4], ticks=[0, 1e-4, 2e-4], extend='max')
+axes[0, 4].set_yticklabels([
+    "$0$",
+    """$1 \cdot 10^{-4}$""",
+    """$2 \cdot 10^{-4}$"""
+])
+axes[0, 0].set_ylabel("Estimate $1/N$")
+
+# %%
+radius = 100
+
+for i, step in enumerate(range(0, 31, 10)):
+    img = axes[1, i].imshow(heat_pi.as_matrix()[step, :].reshape((radius, radius)),
+                            vmin=0,
+                            vmax=1,
+                            cmap=cmap,
+                            aspect='auto',
+                            interpolation='none')
+    axes[1, i].get_xaxis().set_ticks([])
+    axes[1, i].get_yaxis().set_ticks([])
+
+plt.colorbar(img, cax=axes[1, 4], ticks=[0, 0.25*np.pi, 1])
+axes[1, 4].set_yticklabels(["$0$", """$\pi/4$""", "$1$"])
+axes[1, 0].get_yaxis().set_visible(True)
+axes[1, 0].set_ylabel("Estimate $\\pi/4$")
+
+# %%
+rows = 100
+cols = 100
+
+for i, step in enumerate(range(0, 31, 10)):
+    img = axes[2, i].imshow(heat_epidemic.as_matrix()[step, :].reshape((rows, cols)),
+                            vmin=0,
+                            vmax=1,
+                            cmap=cmap,
+                            aspect='auto',
+                            interpolation='none')
+    axes[2, i].get_xaxis().set_ticks([])
+    axes[2, i].get_yaxis().set_ticks([])
+    axes[2, i].set_xlim(0, 99)
+    axes[2, i].set_xlabel("Cycle {}".format(step))
+
+plt.colorbar(img, cax=axes[2, 4], ticks=[0, 1])
+axes[2, 0].set_ylabel("Estimate $max$")
+
+# %%
 fig.tight_layout()
-plt.savefig("report/figures/heatmap-epidemic.pdf", bbox_inches='tight')
+fig.subplots_adjust(hspace=0.14)
+plt.savefig("report/figures/heatmaps.pdf", bbox_inches='tight')
 plt.show()
 
 # %%
@@ -388,10 +380,10 @@ heat_size_stats *= 100.
 heat_epidemic_stats *= 100.
 
 # %%
-fig, ax = plt.subplots(figsize=(4, 3))
-heat_pi_stats.plot(y="HasCorrectValue", label="Avg $(\\pi)$", ax=ax)
-heat_size_stats.plot(y="HasCorrectValue", label="Avg $(1/N)$", ax=ax)
+fig, ax = plt.subplots()
 heat_epidemic_stats.plot(y="HasCorrectValue", label="Max $(1)$", ax=ax)
+heat_pi_stats.plot(y="HasCorrectValue", label="Avg $(\\pi/4)$", ax=ax)
+heat_size_stats.plot(y="HasCorrectValue", label="Avg $(1/N)$", ax=ax)
 ax.set_xlabel("Cycle")
 ax.set_ylabel("Nodes that Know the Exact Value (\%)");
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
