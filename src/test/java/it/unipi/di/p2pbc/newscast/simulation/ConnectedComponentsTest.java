@@ -12,7 +12,7 @@ public class ConnectedComponentsTest {
             Cache.setSize(cache);
             Coordinator<Double> coordinator = new Coordinator<Double>(
                     new ScaleFreeNetwork<>(1024, id -> new ConstAgent(0.)),
-                    new NetworkStatsLogger(directory + "cache-C" + cache + ".csv"));
+                    new NetworkStatsLogger(directory + "cache-C" + cache + ".csv", false));
             coordinator.simulate(20);
         }
     }

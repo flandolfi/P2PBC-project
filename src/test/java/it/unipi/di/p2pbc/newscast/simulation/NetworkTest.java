@@ -3,7 +3,7 @@ package it.unipi.di.p2pbc.newscast.simulation;
 import it.unipi.di.p2pbc.newscast.core.ConstAgent;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class NetworkTest {
     @Test
