@@ -23,7 +23,7 @@ This task has no real life application, and was set up as a toy example: before 
 
 ### Estimate *max* ###
 
-The last example is a simple task of epidemic-based aggregation: every node adopts *max*(·,·) as aggregation function and, as in the first example, the network starts with all agents' values to 0 but 1. The convergence is much faster: after 21 cycles every node knows the maximum value in the network. This example can be seen as an alarm propagation: we could substitute the aggregation function with a boolean *OR*, which would set the stored value to *true* (i.e, the alarm goes on) if one of the aggregated pair is *true*. The propagation rate would be analogous to the one reported in this example. 
+The last example is a simple task of epidemic-based aggregation: every node adopts *max*(·,·) as aggregation function and, as in the first example, the network starts with all nodes' values to 0 but 1. The convergence is much faster: after 21 cycles every node knows the maximum value in the network. This example can be seen as an alarm propagation: we could substitute the aggregation function with a boolean *OR*, which would set the stored value to *true* (i.e, the alarm goes on) if one of the aggregated pair is *true*. The propagation rate would be analogous to the one reported in this example.
 
 <p align="center">
   <img src="imgs/max.gif">
@@ -31,4 +31,4 @@ The last example is a simple task of epidemic-based aggregation: every node adop
 
 ## References ##
 
-[1] M.Jelasity, W.Kowalszyk, M.van Steen Newscast Computing, Internal Report IR-CS-006 VUA, Amsterdam, 2003
+[1] M.Jelasity, W.Kowalszyk, M.van Steen. *Newscast Computing*, Internal Report IR-CS-006 VUA, Amsterdam, 2003
